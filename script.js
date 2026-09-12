@@ -1,5 +1,5 @@
 // ============================================
-// Ember & Ash — shared site behavior
+// Decorative Corner — shared site behavior
 // ============================================
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -24,7 +24,7 @@ function initMobileNav() {
 
 /* ---------- Add to cart (front-end only, no backend wired up) ---------- */
 function initAddToCart() {
-  const buttons = document.querySelectorAll('.add-btn');
+  const buttons = document.querySelectorAll('.add-btn:not([disabled])');
   let cartCount = 0;
   const cartBtn = document.querySelector('[aria-label^="Cart"]');
 
@@ -43,7 +43,7 @@ function initAddToCart() {
 
       setTimeout(() => {
         btn.removeAttribute('data-added');
-        btn.textContent = 'Add';
+        btn.textContent = 'Add to cart';
       }, 1600);
     });
   });
@@ -62,13 +62,13 @@ function initNewsletterForm() {
 
     if (!isValidEmail(email)) {
       note.textContent = 'Please enter a valid email address.';
-      note.style.color = '#e08a6a';
+      note.style.color = '#b5502e';
       return;
     }
 
     // No backend connected yet — this just confirms the input locally.
-    note.textContent = `Thanks — we'll send new-roast updates to ${email}.`;
-    note.style.color = 'var(--gold)';
+    note.textContent = `Thanks — we'll let you know at ${email} when new pieces launch.`;
+    note.style.color = '#b8923f';
     form.reset();
   });
 }
@@ -87,7 +87,6 @@ function initContactForm() {
 
   const status = document.getElementById('form-status');
 
-  // Clear individual field errors as the user fixes them
   Object.values(fields).forEach(({ el, row }) => {
     el.addEventListener('input', () => row.classList.remove('has-error'));
     el.addEventListener('change', () => row.classList.remove('has-error'));
