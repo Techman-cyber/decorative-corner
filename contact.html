@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Contact — Ember &amp; Ash</title>
-<meta name="description" content="Get in touch with Ember & Ash Coffee Co. — order questions, wholesale, or just to say hi.">
+<title>Contact — Decorative Corner</title>
+<meta name="description" content="Get in touch with Decorative Corner — order questions, custom colorways, or wholesale inquiries.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -16,7 +16,19 @@
 
 <header class="site-header">
   <div class="wrap">
-    <a class="brand" href="index.html">Ember <span>&amp;</span> Ash</a>
+    <a class="brand" href="index.html">
+      <svg class="logo-mark" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="20" cy="14" r="10" fill="none" stroke="#1c2d4f" stroke-width="2.6"/>
+        <line x1="20" y1="4" x2="20" y2="1" stroke="#1c2d4f" stroke-width="1.4"/>
+        <line x1="13" y1="22" x2="13" y2="37" stroke="#b8923f" stroke-width="1.4"/>
+        <line x1="20" y1="24" x2="20" y2="39" stroke="#b8923f" stroke-width="1.4"/>
+        <line x1="27" y1="22" x2="27" y2="37" stroke="#b8923f" stroke-width="1.4"/>
+        <circle cx="13" cy="28" r="1.6" fill="#b8923f"/>
+        <circle cx="20" cy="31" r="1.6" fill="#b8923f"/>
+        <circle cx="27" cy="28" r="1.6" fill="#b8923f"/>
+      </svg>
+      <span class="brand-name">Decorative<br>Corner</span>
+    </a>
 
     <nav class="main-nav" aria-label="Main">
       <ul>
@@ -49,7 +61,7 @@
   <section class="page-hero">
     <div class="wrap">
       <h1>Get in touch</h1>
-      <p>Questions about an order, wholesale inquiries, or just want to talk coffee — we read every message ourselves.</p>
+      <p>Questions about an order, a custom colorway, or a wholesale inquiry — we read and answer every message ourselves.</p>
     </div>
   </section>
 
@@ -61,26 +73,31 @@
         <ul class="info-list">
           <li>
             <span class="label">Email</span>
-            <a class="value" href="mailto:hello@emberandash.coffee">hello@emberandash.coffee</a>
+            <a class="value" href="mailto:hello@decorativecorner.shop">hello@decorativecorner.shop</a>
           </li>
           <li>
             <span class="label">Phone</span>
-            <a class="value" href="tel:+15035551234">(503) 555-1234</a>
-          </li>
-          <li>
-            <span class="label">Roastery &amp; pickup</span>
-            <span class="value">142 Kiln Street, Portland, OR 97214</span>
+            <a class="value" href="tel:+15551234567">(555) 123-4567</a>
           </li>
           <li>
             <span class="label">Hours</span>
-            <span class="value">Mon–Fri, 8am–4pm PT</span>
+            <span class="value">Mon–Sat, 9am–5pm</span>
+          </li>
+          <li>
+            <span class="label">Shipping</span>
+            <span class="value">Ships within 3–5 business days, made to order</span>
           </li>
         </ul>
-        <div class="map-block" role="img" aria-label="Map showing the Ember and Ash roastery location in Portland, Oregon"></div>
+
+        <div class="mini-gallery" aria-hidden="true">
+          <div><img src="images/final-azure.jpg" alt=""></div>
+          <div><img src="images/final-sage.jpg" alt=""></div>
+          <div><img src="images/final-jute.jpg" alt=""></div>
+        </div>
       </div>
 
       <form class="contact-form" id="contact-form" novalidate>
-        <h2 style="font-family: var(--font-display); font-size: 22px; margin: 0 0 20px;">Send a message</h2>
+        <h2 style="font-family: var(--font-display); font-size: 22px; margin: 0 0 20px; color: var(--navy);">Send a message</h2>
 
         <div class="two-col">
           <div class="form-row" id="row-name">
@@ -101,8 +118,8 @@
           <select id="topic" name="topic" required>
             <option value="">Select a topic</option>
             <option value="order">An existing order</option>
-            <option value="wholesale">Wholesale / cafe accounts</option>
-            <option value="general">General question</option>
+            <option value="custom">Custom colorway request</option>
+            <option value="wholesale">Wholesale inquiry</option>
             <option value="other">Something else</option>
           </select>
           <p class="error-text">Please select a topic.</p>
@@ -110,7 +127,7 @@
 
         <div class="form-row" id="row-message">
           <label for="message">Message</label>
-          <textarea id="message" name="message" placeholder="How can we help?" required minlength="10"></textarea>
+          <textarea id="message" name="message" placeholder="Tell us what you're looking for..." required minlength="10"></textarea>
           <p class="error-text">Please enter a message (at least 10 characters).</p>
         </div>
 
@@ -128,15 +145,14 @@
   <div class="wrap">
     <div class="footer-grid">
       <div>
-        <h3>Ember &amp; Ash</h3>
-        <p style="max-width: 32ch; color: var(--bark); font-size: 14px;">Small-batch coffee, roasted weekly and shipped fresh from our roastery.</p>
+        <h3>Decorative Corner</h3>
+        <p style="max-width: 32ch; color: var(--muted); font-size: 14px;">Handmade beaded wall and door hangings, made and packed by hand.</p>
       </div>
       <div>
         <h3>Shop</h3>
         <ul>
-          <li><a href="index.html#shop">All coffee</a></li>
-          <li><a href="index.html#shop">Subscriptions</a></li>
-          <li><a href="index.html#shop">Gift sets</a></li>
+          <li><a href="index.html#shop">All pieces</a></li>
+          <li><a href="contact.html">Custom colorways</a></li>
         </ul>
       </div>
       <div>
@@ -148,8 +164,8 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <span>&copy; 2026 Ember &amp; Ash Coffee Co.</span>
-      <span>Roasted and shipped from Portland, OR</span>
+      <span>&copy; 2026 Decorative Corner</span>
+      <span>Made and packed by hand</span>
     </div>
   </div>
 </footer>
