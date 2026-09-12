@@ -21,7 +21,7 @@
 <div class="auth-shell">
   <div class="auth-card">
     <a class="auth-brand" href="index.html">
-      <img src="images/logo-header.png" alt="Decorative Corner logo">
+      <img src="images/logo.png" alt="Decorative Corner logo">
       <span>Decorative Corner</span>
     </a>
 
@@ -65,7 +65,25 @@
       Continue with Google
     </button>
 
+    <button class="btn-google" type="button" id="apple-signin" style="margin-top: 10px; background: #000; color: #fff; border-color: #000;">
+      <svg width="16" height="16" viewBox="0 0 384 512" xmlns="http://www.w3.org/2000/svg" fill="#fff">
+        <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141 0 184.8 0 273.5c0 26.2 4.8 53.3 14.4 81.2 12.8 37.6 59 129.3 107.2 127.8 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-84.1 102.6-121.8-65.2-30.7-57.7-90-57.7-91.9zM255.4 65.9c27-32.1 24.5-61.4 23.7-71.9-23.8 1.4-51.4 16.4-67.1 34.9-17.3 19.8-27.5 44.4-25.3 71.5 25.7 2 49.1-10.9 68.7-34.5z"/>
+      </svg>
+      Continue with Apple
+    </button>
+
     <p class="auth-footer-note">By continuing you agree to be nice to our beads.</p>
+
+    <details style="margin-top: 16px; font-size: 12px; color: var(--muted);">
+      <summary style="cursor: pointer;">Google/Apple sign-in not working?</summary>
+      <ul style="padding-left: 18px; margin: 10px 0 0; line-height: 1.6;">
+        <li>Open this site over <code>http://</code> or <code>https://</code> (e.g. a local dev server) — not by double-clicking the HTML file, since Google/Apple pop-ups refuse to run from a <code>file://</code> page.</li>
+        <li>In the Firebase console, confirm Google (and Apple) are turned <strong>on</strong> under Authentication → Sign-in method.</li>
+        <li>Add whatever domain you're testing on (e.g. <code>localhost</code>, or your real domain) under Authentication → Settings → Authorized domains.</li>
+        <li>Double-check <code>firebase-config.js</code> has your actual project values, not the placeholder text.</li>
+        <li>Open the browser console (F12) — the exact error code shows there and above the form.</li>
+      </ul>
+    </details>
   </div>
 </div>
 
@@ -77,6 +95,7 @@
     createUserWithEmailAndPassword,
     signInWithPopup,
     GoogleAuthProvider,
+    OAuthProvider,
     sendPasswordResetEmail,
   } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
 
@@ -122,6 +141,7 @@
   tabSignup.addEventListener("click", () => setMode("signup"));
 
   function showError(err) {
+    console.error("Auth error:", err);
     status.className = "auth-status error";
     status.textContent = friendlyError(err);
   }
@@ -135,9 +155,14 @@
       case "auth/invalid-credential": return "Email or password is incorrect.";
       case "auth/email-already-in-use": return "An account already exists with that email — try signing in instead.";
       case "auth/weak-password": return "Password should be at least 6 characters.";
-      case "auth/popup-closed-by-user": return "Google sign-in was closed before finishing.";
+      case "auth/popup-closed-by-user": return "The sign-in popup was closed before finishing.";
+      case "auth/popup-blocked": return "Your browser blocked the sign-in popup — allow popups for this site and try again.";
+      case "auth/cancelled-popup-request": return "Only one sign-in popup can be open at a time.";
+      case "auth/unauthorized-domain": return "This domain isn't authorized in Firebase yet (Authentication → Settings → Authorized domains).";
+      case "auth/operation-not-allowed": return "This sign-in method isn't enabled yet in the Firebase console (Authentication → Sign-in method).";
       case "auth/network-request-failed": return "Network error — check your connection and try again.";
-      default: return "Something went wrong. Please try again.";
+      case "auth/configuration-not-found": return "Firebase config looks incomplete — check firebase-config.js has your real project values.";
+      default: return `Something went wrong${code ? " (" + code + ")" : ""}. Check the browser console for details.`;
     }
   }
 
@@ -185,6 +210,20 @@
     status.className = "auth-status";
     try {
       await signInWithPopup(auth, new GoogleAuthProvider());
+      location.replace(next);
+    } catch (err) {
+      showError(err);
+    }
+  });
+
+  document.getElementById("apple-signin").addEventListener("click", async () => {
+    status.textContent = "";
+    status.className = "auth-status";
+    try {
+      const provider = new OAuthProvider("apple.com");
+      provider.addScope("email");
+      provider.addScope("name");
+      await signInWithPopup(auth, provider);
       location.replace(next);
     } catch (err) {
       showError(err);

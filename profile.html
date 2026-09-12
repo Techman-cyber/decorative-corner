@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en" class="auth-checking">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Profile — Decorative Corner</title>
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="192x192" href="images/favicon-192.png">
+<link rel="apple-touch-icon" href="images/favicon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <img class="logo-mark" src="images/logo.png" alt="Decorative Corner logo">
+      <span class="brand-name">Decorative<br>Corner</span>
+    </a>
+
+    <nav class="main-nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#shop">Shop</a></li>
+        <li><a href="index.html#story">Our Story</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="profile.html" aria-current="page">Profile</a></li>
+      </ul>
+    </nav>
+
+    <div class="header-actions">
+      <span class="user-chip" data-user-email></span>
+      <button class="icon-btn" type="button" data-logout>Log out</button>
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav">Menu</button>
+    </div>
+  </div>
+
+  <nav id="mobile-nav" class="mobile-nav" aria-label="Mobile" hidden>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="index.html#shop">Shop</a></li>
+      <li><a href="index.html#story">Our Story</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="profile.html">Profile</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="main">
+  <div class="profile-shell">
+    <h1>Your profile</h1>
+    <p class="lead">Update how your account looks and how you sign in.</p>
+
+    <div class="profile-avatar-row">
+      <img class="profile-avatar" id="avatar-preview" src="images/logo.png" alt="">
+      <div>
+        <strong id="avatar-name">Loading…</strong>
+        <span id="avatar-email"></span><br>
+        <span class="provider-badge" id="provider-badge"></span>
+      </div>
+    </div>
+
+    <!-- Name + photo -->
+    <section class="profile-card">
+      <h2>Name &amp; photo</h2>
+      <p class="card-note">This is what shows up around the site.</p>
+      <form id="profile-form">
+        <div class="auth-field">
+          <label for="display-name">Display name</label>
+          <input type="text" id="display-name" name="display-name" placeholder="Jane Doe" autocomplete="name">
+        </div>
+        <div class="auth-field">
+          <label for="photo-url">Photo URL</label>
+          <input type="url" id="photo-url" name="photo-url" placeholder="https://example.com/me.jpg">
+        </div>
+        <button class="btn btn-primary" type="submit">Save changes</button>
+        <p class="auth-status" id="profile-status" role="status"></p>
+      </form>
+    </section>
+
+    <!-- Email (password accounts only) -->
+    <section class="profile-card" id="email-card" hidden>
+      <h2>Email address</h2>
+      <p class="card-note">Changing this requires your current password.</p>
+      <form id="email-form-p">
+        <div class="auth-field">
+          <label for="new-email">New email</label>
+          <input type="email" id="new-email" name="new-email" autocomplete="email">
+        </div>
+        <div class="auth-field">
+          <label for="current-password-email">Current password</label>
+          <input type="password" id="current-password-email" name="current-password-email" autocomplete="current-password">
+        </div>
+        <button class="btn btn-outline" type="submit">Update email</button>
+        <p class="auth-status" id="email-status" role="status"></p>
+      </form>
+    </section>
+
+    <!-- Password (password accounts only) -->
+    <section class="profile-card" id="password-card" hidden>
+      <h2>Password</h2>
+      <p class="card-note">Enter your current password, then choose a new one.</p>
+      <form id="password-form">
+        <div class="auth-field">
+          <label for="current-password">Current password</label>
+          <input type="password" id="current-password" name="current-password" autocomplete="current-password">
+        </div>
+        <div class="auth-field">
+          <label for="new-password">New password</label>
+          <input type="password" id="new-password" name="new-password" minlength="6" autocomplete="new-password">
+        </div>
+        <button class="btn btn-outline" type="submit">Update password</button>
+        <p class="auth-status" id="password-status" role="status"></p>
+      </form>
+    </section>
+
+    <section class="profile-card" id="sso-note" hidden>
+      <h2>Signed in with a provider</h2>
+      <p class="card-note">You signed in with Google or Apple, so there's no separate site password to manage here — email and password changes happen with that provider directly.</p>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-bottom">
+      <span>&copy; 2026 Decorative Corner</span>
+      <span>Made and packed by hand</span>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="firebase-config.js"></script>
+<script type="module" src="auth-guard.js"></script>
+<script src="script.js"></script>
+<script type="module">
+  import { auth } from "./firebase-config.js";
+  import {
+    onAuthStateChanged,
+    updateProfile,
+    updateEmail,
+    updatePassword,
+    reauthenticateWithCredential,
+    EmailAuthProvider,
+  } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+
+  const nameInput = document.getElementById("display-name");
+  const photoInput = document.getElementById("photo-url");
+  const avatarPreview = document.getElementById("avatar-preview");
+  const avatarName = document.getElementById("avatar-name");
+  const avatarEmail = document.getElementById("avatar-email");
+  const providerBadge = document.getElementById("provider-badge");
+  const emailCard = document.getElementById("email-card");
+  const passwordCard = document.getElementById("password-card");
+  const ssoNote = document.getElementById("sso-note");
+
+  let currentUser = null;
+
+  onAuthStateChanged(auth, (user) => {
+    if (!user) return; // auth-guard.js handles the redirect
+    currentUser = user;
+
+    nameInput.value = user.displayName || "";
+    photoInput.value = user.photoURL || "";
+    avatarPreview.src = user.photoURL || "images/logo.png";
+    avatarName.textContent = user.displayName || "No name set";
+    avatarEmail.textContent = user.email || "";
+
+    const hasPasswordProvider = user.providerData.some((p) => p.providerId === "password");
+    const providerLabel = user.providerData.map((p) => {
+      if (p.providerId === "google.com") return "Google";
+      if (p.providerId === "apple.com") return "Apple";
+      if (p.providerId === "password") return "Email/password";
+      return p.providerId;
+    }).join(" · ");
+    providerBadge.textContent = providerLabel;
+
+    if (hasPasswordProvider) {
+      emailCard.hidden = false;
+      passwordCard.hidden = false;
+      document.getElementById("new-email").value = user.email || "";
+    } else {
+      ssoNote.hidden = false;
+    }
+  });
+
+  function showStatus(el, msg, isError) {
+    el.textContent = msg;
+    el.className = "auth-status " + (isError ? "error" : "success");
+  }
+
+  document.getElementById("profile-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const status = document.getElementById("profile-status");
+    try {
+      await updateProfile(currentUser, {
+        displayName: nameInput.value.trim() || null,
+        photoURL: photoInput.value.trim() || null,
+      });
+      avatarPreview.src = photoInput.value.trim() || "images/logo.png";
+      avatarName.textContent = nameInput.value.trim() || "No name set";
+      showStatus(status, "Profile updated.", false);
+    } catch (err) {
+      console.error(err);
+      showStatus(status, err.message || "Couldn't save your profile.", true);
+    }
+  });
+
+  document.getElementById("email-form-p").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const status = document.getElementById("email-status");
+    const newEmail = document.getElementById("new-email").value.trim();
+    const currentPassword = document.getElementById("current-password-email").value;
+    try {
+      const cred = EmailAuthProvider.credential(currentUser.email, currentPassword);
+      await reauthenticateWithCredential(currentUser, cred);
+      await updateEmail(currentUser, newEmail);
+      avatarEmail.textContent = newEmail;
+      showStatus(status, "Email updated.", false);
+      document.getElementById("current-password-email").value = "";
+    } catch (err) {
+      console.error(err);
+      showStatus(status, err.message || "Couldn't update email.", true);
+    }
+  });
+
+  document.getElementById("password-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const status = document.getElementById("password-status");
+    const currentPassword = document.getElementById("current-password").value;
+    const newPassword = document.getElementById("new-password").value;
+    try {
+      const cred = EmailAuthProvider.credential(currentUser.email, currentPassword);
+      await reauthenticateWithCredential(currentUser, cred);
+      await updatePassword(currentUser, newPassword);
+      showStatus(status, "Password updated.", false);
+      document.getElementById("password-form").reset();
+    } catch (err) {
+      console.error(err);
+      showStatus(status, err.message || "Couldn't update password.", true);
+    }
+  });
+</script>
+</body>
+</html>
