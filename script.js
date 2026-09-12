@@ -140,22 +140,42 @@ function isValidEmail(value) {
 /* ---------- Hidden admin shortcut: Ctrl + A twice ---------- */
 (function initAdminShortcut() {
   let presses = 0;
+  let lastPress = 0;
   let resetTimer;
+  let comboHeld = false;
+
   document.addEventListener('keydown', (event) => {
-    if (event.ctrlKey && event.key.toLowerCase() === 'a') {
-      event.preventDefault();
-      presses += 1;
+    const isCtrlA = event.ctrlKey && event.code === 'KeyA';
+    if (!isCtrlA || event.repeat || comboHeld) return;
+
+    comboHeld = true;
+    event.preventDefault();
+    event.stopPropagation();
+
+    const now = Date.now();
+    if (now - lastPress > 1500) presses = 0;
+    lastPress = now;
+    presses += 1;
+    clearTimeout(resetTimer);
+    resetTimer = setTimeout(() => {
+      presses = 0;
+      lastPress = 0;
+    }, 1500);
+
+    if (presses === 2) {
+      presses = 0;
+      lastPress = 0;
       clearTimeout(resetTimer);
-      resetTimer = setTimeout(() => { presses = 0; }, 1200);
-      if (presses === 2) {
-        presses = 0;
-        const pass = window.prompt('Admin password:');
-        if (pass === 'whytofearwhenwearehere') {
-          window.location.href = 'admin.html';
-        } else if (pass !== null) {
-          window.alert('Incorrect admin password.');
-        }
+      const pass = window.prompt('Admin password:');
+      if (pass === 'whytofearwhenwearehere') {
+        window.location.href = 'admin.html';
+      } else if (pass !== null) {
+        window.alert('Incorrect admin password.');
       }
     }
-  });
+  }, true);
+
+  document.addEventListener('keyup', (event) => {
+    if (event.code === 'KeyA') comboHeld = false;
+  }, true);
 })();
