@@ -21,12 +21,12 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/fireba
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyBwOA143HmGuEesTfPtbAaCwM_oI4G1kfU",
+  authDomain: "decorative-corner.firebaseapp.com",
+  projectId: "decorative-corner",
+  storageBucket: "decorative-corner.firebasestorage.app",
+  messagingSenderId: "5254377508",
+  appId: "1:5254377508:web:0031ec5d9c7d143dbba8b1"
 };
 
 const app = initializeApp(firebaseConfig);
