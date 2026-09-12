@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — Ember &amp; Ash</title>
+<meta name="description" content="Get in touch with Ember & Ash Coffee Co. — order questions, wholesale, or just to say hi.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html">Ember <span>&amp;</span> Ash</a>
+
+    <nav class="main-nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#shop">Shop</a></li>
+        <li><a href="index.html#story">Our Story</a></li>
+        <li><a href="contact.html" aria-current="page">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="header-actions">
+      <button class="icon-btn" type="button" aria-label="Search">Search</button>
+      <button class="icon-btn" type="button" aria-label="Cart, 0 items">Cart (0)</button>
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav">Menu</button>
+    </div>
+  </div>
+
+  <nav id="mobile-nav" class="mobile-nav" aria-label="Mobile" hidden>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="index.html#shop">Shop</a></li>
+      <li><a href="index.html#story">Our Story</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="main">
+
+  <section class="page-hero">
+    <div class="wrap">
+      <h1>Get in touch</h1>
+      <p>Questions about an order, wholesale inquiries, or just want to talk coffee — we read every message ourselves.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap contact-layout">
+
+      <div class="contact-info">
+        <h2>Reach us directly</h2>
+        <ul class="info-list">
+          <li>
+            <span class="label">Email</span>
+            <a class="value" href="mailto:hello@emberandash.coffee">hello@emberandash.coffee</a>
+          </li>
+          <li>
+            <span class="label">Phone</span>
+            <a class="value" href="tel:+15035551234">(503) 555-1234</a>
+          </li>
+          <li>
+            <span class="label">Roastery &amp; pickup</span>
+            <span class="value">142 Kiln Street, Portland, OR 97214</span>
+          </li>
+          <li>
+            <span class="label">Hours</span>
+            <span class="value">Mon–Fri, 8am–4pm PT</span>
+          </li>
+        </ul>
+        <div class="map-block" role="img" aria-label="Map showing the Ember and Ash roastery location in Portland, Oregon"></div>
+      </div>
+
+      <form class="contact-form" id="contact-form" novalidate>
+        <h2 style="font-family: var(--font-display); font-size: 22px; margin: 0 0 20px;">Send a message</h2>
+
+        <div class="two-col">
+          <div class="form-row" id="row-name">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" placeholder="Jane Doe" required autocomplete="name">
+            <p class="error-text">Please enter your name.</p>
+          </div>
+
+          <div class="form-row" id="row-email">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="you@email.com" required autocomplete="email">
+            <p class="error-text">Please enter a valid email address.</p>
+          </div>
+        </div>
+
+        <div class="form-row" id="row-topic">
+          <label for="topic">What's this about?</label>
+          <select id="topic" name="topic" required>
+            <option value="">Select a topic</option>
+            <option value="order">An existing order</option>
+            <option value="wholesale">Wholesale / cafe accounts</option>
+            <option value="general">General question</option>
+            <option value="other">Something else</option>
+          </select>
+          <p class="error-text">Please select a topic.</p>
+        </div>
+
+        <div class="form-row" id="row-message">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" placeholder="How can we help?" required minlength="10"></textarea>
+          <p class="error-text">Please enter a message (at least 10 characters).</p>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Send message</button>
+
+        <p class="form-status" id="form-status" role="status"></p>
+      </form>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <h3>Ember &amp; Ash</h3>
+        <p style="max-width: 32ch; color: var(--bark); font-size: 14px;">Small-batch coffee, roasted weekly and shipped fresh from our roastery.</p>
+      </div>
+      <div>
+        <h3>Shop</h3>
+        <ul>
+          <li><a href="index.html#shop">All coffee</a></li>
+          <li><a href="index.html#shop">Subscriptions</a></li>
+          <li><a href="index.html#shop">Gift sets</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Company</h3>
+        <ul>
+          <li><a href="index.html#story">Our story</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Ember &amp; Ash Coffee Co.</span>
+      <span>Roasted and shipped from Portland, OR</span>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
