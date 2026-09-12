@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initAddToCart();
   initNewsletterForm();
   initContactForm();
+  initCollectionSearch();
 });
 
 /* ---------- Mobile nav toggle ---------- */
@@ -179,3 +180,11 @@ function isValidEmail(value) {
     if (event.code === 'KeyA') comboHeld = false;
   }, true);
 })();
+
+
+function initCollectionSearch(){
+  const input=document.getElementById('collection-search');
+  if(!input)return;
+  const cards=[...document.querySelectorAll('.product-card')];
+  input.addEventListener('input',()=>{const term=input.value.trim().toLowerCase();cards.forEach(card=>{card.hidden=!!term&&!card.textContent.toLowerCase().includes(term);});});
+}
