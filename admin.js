@@ -1,0 +1,12 @@
+import { db, auth } from './firebase-config.js';
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js';
+
+const form=document.querySelector('#product-form'); const list=document.querySelector('#products-list'); const status=document.querySelector('#status');
+let editing=null;
+const $=id=>document.getElementById(id);
+function msg(t,ok=false){status.textContent=t;status.className=ok?'success':'error';}
+function reset(){form.reset();editing=null;$('save-btn').textContent='Add product';$('cancel-btn').hidden=true;}
+function card(p){const el=document.createElement('article');el.className='admin-product';el.innerHTML=`<img src="${escapeHtml(p.image||'')}" alt=""><div><h3>${escapeHtml(p.name||'Untitled')}</h3><p>${escapeHtml(p.description||'')}</p><strong>${escapeHtml(p.price||'')}</strong></div><div class="admin-actions"><button data-edit>Edit</button><button data-delete>Delete</button></div>`;el.querySelector('[data-edit]').onclick=()=>{editing=p.id;$('name').value=p.name||'';$('price').value=p.price||'';$('image').value=p.image||'';$('description').value=p.description||'';$('save-btn').textContent='Save changes';$('cancel-btn').hidden=false;window.scrollTo({top:0,behavior:'smooth'});};el.querySelector('[data-delete]').onclick=async()=>{if(!confirm('Delete this product?'))return;try{await deleteDoc(doc(db,'products',p.id));msg('Product deleted.',true);load();}catch(e){msg(e.message)}};return el;}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+async function load(){list.textContent='Loading products…';try{const snap=await getDocs(collection(db,'products'));list.replaceChildren(...snap.docs.map(d=>card({id:d.id,...d.data()})));if(!snap.size)list.textContent='No products yet. Add your first product above.';}catch(e){list.textContent='Could not load products: '+e.message;}}
+form.addEventListener('submit',async e=>{e.preventDefault();const p={name:$('name').value.trim(),price:$('price').value.trim(),image:$('image').value.trim(),description:$('description').value.trim(),updatedAt:serverTimestamp()};if(!p.name)return msg('Product name is required.');try{if(editing)await updateDoc(doc(db,'products',editing),p);else await addDoc(collection(db,'products'),{...p,createdAt:serverTimestamp()});msg(editing?'Product updated.':'Product added.',true);reset();load();}catch(e){msg(e.message);}});$('cancel-btn').onclick=reset;load();
