@@ -37,7 +37,7 @@
     <div class="header-actions">
       <span class="user-chip" data-user-email></span>
       <button class="icon-btn" type="button" aria-label="Search">Search</button>
-      <button class="icon-btn" type="button" aria-label="Cart, 0 items">Cart (0)</button>
+      <button class="icon-btn" type="button" data-cart-button aria-label="Cart, 0 items">Cart (0)</button>
       <button class="icon-btn" type="button" data-logout>Log out</button>
       <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav">Menu</button>
     </div>
@@ -85,7 +85,7 @@
 
       <ul class="product-grid">
         <!-- PLACEHOLDER PRODUCT 1 — swap images/product-pink.png + edit name/price/description -->
-        <li class="product-card">
+        <li class="product-card" data-product-id="blush">
           <div class="product-photo">
             <span class="tag">Wall hanging</span>
             <img src="images/product-pink.png" alt="Pink beaded wall hanging — replace with real product photo" loading="lazy">
@@ -95,13 +95,13 @@
             <p class="meta">Edit this description to match the real piece</p>
             <div class="product-row">
               <span class="price">$00</span>
-              <button class="add-btn" type="button" data-product="Blush Ring">Add to cart</button>
+              <button class="add-btn" type="button" data-product="Blush Ring" data-product-id="blush">Add to cart</button>
             </div>
           </div>
         </li>
 
         <!-- PLACEHOLDER PRODUCT 2 — swap images/product-blue.png + edit name/price/description -->
-        <li class="product-card">
+        <li class="product-card" data-product-id="azure">
           <div class="product-photo">
             <span class="tag">Wall hanging</span>
             <img src="images/product-blue.png" alt="Blue beaded wall hanging — replace with real product photo" loading="lazy">
@@ -111,13 +111,13 @@
             <p class="meta">Edit this description to match the real piece</p>
             <div class="product-row">
               <span class="price">$00</span>
-              <button class="add-btn" type="button" data-product="Azure Ring">Add to cart</button>
+              <button class="add-btn" type="button" data-product="Azure Ring" data-product-id="azure">Add to cart</button>
             </div>
           </div>
         </li>
 
         <!-- PLACEHOLDER PRODUCT 3 — swap images/product-green.png + edit name/price/description -->
-        <li class="product-card">
+        <li class="product-card" data-product-id="ivy">
           <div class="product-photo">
             <span class="tag">Wall hanging</span>
             <img src="images/product-green.png" alt="Green beaded wall hanging — replace with real product photo" loading="lazy">
@@ -127,7 +127,7 @@
             <p class="meta">Edit this description to match the real piece</p>
             <div class="product-row">
               <span class="price">$00</span>
-              <button class="add-btn" type="button" data-product="Ivy Ring">Add to cart</button>
+              <button class="add-btn" type="button" data-product="Ivy Ring" data-product-id="ivy">Add to cart</button>
             </div>
           </div>
         </li>
