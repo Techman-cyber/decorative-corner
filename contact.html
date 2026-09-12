@@ -11,7 +11,176 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — Decorative Corner</title>
+<meta name="description" content="Get in touch with Decorative Corner — order questions, custom colorways, or wholesale inquiries.">
+<!-- PLACEHOLDER: favicon uses the same images/logo.jpg — swap that file and this updates too -->
+<link rel="icon" type="image/jpeg" href="images/logo.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <!-- PLACEHOLDER: replace images/logo.jpg with your real logo (square image works best) -->
+      <img class="logo-mark" src="images/logo.jpg" alt="Decorative Corner logo">
+      <span class="brand-name">Decorative<br>Corner</span>
+    </a>
+
+    <nav class="main-nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#shop">Shop</a></li>
+        <li><a href="index.html#story">Our Story</a></li>
+        <li><a href="contact.html" aria-current="page">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="header-actions">
+      <button class="icon-btn" type="button" aria-label="Search">Search</button>
+      <button class="icon-btn" type="button" aria-label="Cart, 0 items">Cart (0)</button>
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav">Menu</button>
+    </div>
+  </div>
+
+  <nav id="mobile-nav" class="mobile-nav" aria-label="Mobile" hidden>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="index.html#shop">Shop</a></li>
+      <li><a href="index.html#story">Our Story</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="main">
+
+  <section class="page-hero">
+    <div class="wrap">
+      <h1>Get in touch</h1>
+      <p>Questions about an order, a custom colorway, or a wholesale inquiry — we read and answer every message ourselves.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap contact-layout">
+
+      <div class="contact-info">
+        <h2>Reach us directly</h2>
+        <ul class="info-list">
+          <li>
+            <span class="label">Email</span>
+            <a class="value" href="mailto:hello@decorativecorner.shop">hello@decorativecorner.shop</a>
+          </li>
+          <li>
+            <span class="label">Phone</span>
+            <a class="value" href="tel:+15551234567">(555) 123-4567</a>
+          </li>
+          <li>
+            <span class="label">Hours</span>
+            <span class="value">Mon–Sat, 9am–5pm</span>
+          </li>
+          <li>
+            <span class="label">Shipping</span>
+            <span class="value">Ships within 3–5 business days, made to order</span>
+          </li>
+        </ul>
+
+        <!-- PLACEHOLDER GALLERY — swap these 3 images for real product shots -->
+        <div class="mini-gallery" aria-hidden="true">
+          <div><img src="images/product-pink.jpg" alt=""></div>
+          <div><img src="images/product-blue.jpg" alt=""></div>
+          <div><img src="images/product-green.jpg" alt=""></div>
+        </div>
+      </div>
+
+      <form class="contact-form" id="contact-form" novalidate>
+        <h2 style="font-family: var(--font-display); font-size: 22px; margin: 0 0 20px; color: var(--navy);">Send a message</h2>
+
+        <div class="two-col">
+          <div class="form-row" id="row-name">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" placeholder="Jane Doe" required autocomplete="name">
+            <p class="error-text">Please enter your name.</p>
+          </div>
+
+          <div class="form-row" id="row-email">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="you@email.com" required autocomplete="email">
+            <p class="error-text">Please enter a valid email address.</p>
+          </div>
+        </div>
+
+        <div class="form-row" id="row-topic">
+          <label for="topic">What's this about?</label>
+          <select id="topic" name="topic" required>
+            <option value="">Select a topic</option>
+            <option value="order">An existing order</option>
+            <option value="custom">Custom colorway request</option>
+            <option value="wholesale">Wholesale inquiry</option>
+            <option value="other">Something else</option>
+          </select>
+          <p class="error-text">Please select a topic.</p>
+        </div>
+
+        <div class="form-row" id="row-message">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" placeholder="Tell us what you're looking for..." required minlength="10"></textarea>
+          <p class="error-text">Please enter a message (at least 10 characters).</p>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Send message</button>
+
+        <p class="form-status" id="form-status" role="status"></p>
+      </form>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <h3>Decorative Corner</h3>
+        <p style="max-width: 32ch; color: var(--muted); font-size: 14px;">Handmade beaded wall and door hangings, made and packed by hand.</p>
+      </div>
+      <div>
+        <h3>Shop</h3>
+        <ul>
+          <li><a href="index.html#shop">All pieces</a></li>
+          <li><a href="contact.html">Custom colorways</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Company</h3>
+        <ul>
+          <li><a href="index.html#story">Our story</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Decorative Corner</span>
+      <span>Made and packed by hand</span>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
 <a class="skip-link" href="#main">Skip to content</a>
 
 <header class="site-header">
