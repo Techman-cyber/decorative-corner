@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="auth-checking">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Contact — Decorative Corner</title>
 <meta name="description" content="Get in touch with Decorative Corner — order questions, custom colorways, or wholesale inquiries.">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="192x192" href="images/favicon-192.png">
+<link rel="apple-touch-icon" href="images/favicon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -17,8 +20,7 @@
 <header class="site-header">
   <div class="wrap">
     <a class="brand" href="index.html">
-      <!-- PLACEHOLDER: replace images/logo.png with your real logo (square image works best) -->
-      <img class="logo-mark" src="images/logo.png" alt="Decorative Corner logo">
+      <img class="logo-mark" src="images/logo-header.png" alt="Decorative Corner logo">
       <span class="brand-name">Decorative<br>Corner</span>
     </a>
 
@@ -32,8 +34,10 @@
     </nav>
 
     <div class="header-actions">
+      <span class="user-chip" data-user-email></span>
       <button class="icon-btn" type="button" aria-label="Search">Search</button>
       <button class="icon-btn" type="button" aria-label="Cart, 0 items">Cart (0)</button>
+      <button class="icon-btn" type="button" data-logout>Log out</button>
       <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav">Menu</button>
     </div>
   </div>
@@ -163,6 +167,8 @@
   </div>
 </footer>
 
+<script type="module" src="firebase-config.js"></script>
+<script type="module" src="auth-guard.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
