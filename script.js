@@ -137,12 +137,12 @@ function isValidEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
-/* ---------- Hidden admin shortcut: Alt + A twice ---------- */
+/* ---------- Hidden admin shortcut: Ctrl + A twice ---------- */
 (function initAdminShortcut() {
   let presses = 0;
   let resetTimer;
   document.addEventListener('keydown', (event) => {
-    if (event.altKey && event.key.toLowerCase() === 'a') {
+    if (event.ctrlKey && event.key.toLowerCase() === 'a') {
       event.preventDefault();
       presses += 1;
       clearTimeout(resetTimer);

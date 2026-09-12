@@ -1,6 +1,15 @@
 import {db,auth} from './firebase-config.js';
 import {collection,addDoc,query,where,onSnapshot,serverTimestamp} from 'https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js';
 import {onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js';
+
+// If the product page is reloaded, return visitors to the shop homepage.
+// Normal navigation from a product card still opens the product page.
+const navigationEntry = performance.getEntriesByType?.('navigation')?.[0];
+const isReload = navigationEntry?.type === 'reload' || (!navigationEntry && performance.navigation?.type === 1);
+if (isReload && location.pathname.endsWith('/product.html')) {
+  location.replace('./');
+  throw new Error('Redirecting after product-page reload');
+}
 const products={"Blush Ring":{image:'images/product-pink.png',price:0,description:'Handmade pink beaded wall hanging.'},"Azure Ring":{image:'images/product-blue.png',price:0,description:'Handmade blue beaded wall hanging.'},"Ivy Ring":{image:'images/product-green.png',price:0,description:'Handmade green beaded wall hanging.'}};
 const name=new URLSearchParams(location.search).get('name')||'Blush Ring',p=products[name]||products['Blush Ring'];
 document.getElementById('product-name').textContent=name;document.getElementById('product-image').src=p.image;document.getElementById('product-price').textContent=p.price?'₹'+p.price:'Price coming soon';document.getElementById('product-description').textContent=p.description;
