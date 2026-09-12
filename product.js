@@ -27,5 +27,5 @@ document.addEventListener('click',async e=>{
  const b=e.target.closest('.delete-review'); if(!b)return;
  if(!auth.currentUser)return;
  if(!confirm('Delete your review?'))return;
- try{await deleteDoc(doc(db,'reviews',b.dataset.id));}catch(err){console.error(err);alert('Could not delete review.');}
+ try{await deleteDoc(doc(db,'reviews',b.dataset.id));document.getElementById('status').textContent='Your review was deleted.';}catch(err){console.error('Review delete error:',err);document.getElementById('status').textContent='We couldn’t delete your review. Please check your Firebase rules.';}
 });
