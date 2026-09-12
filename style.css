@@ -74,7 +74,13 @@ textarea:focus-visible {
   text-decoration: none;
 }
 
-.logo-mark { width: 34px; height: 34px; flex-shrink: 0; }
+.logo-mark {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  object-fit: cover;
+}
 
 .brand-name {
   font-family: var(--font-display);
