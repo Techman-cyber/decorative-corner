@@ -136,3 +136,26 @@ function initContactForm() {
 function isValidEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
+
+/* ---------- Hidden admin shortcut: Alt + A twice ---------- */
+(function initAdminShortcut() {
+  let presses = 0;
+  let resetTimer;
+  document.addEventListener('keydown', (event) => {
+    if (event.altKey && event.key.toLowerCase() === 'a') {
+      event.preventDefault();
+      presses += 1;
+      clearTimeout(resetTimer);
+      resetTimer = setTimeout(() => { presses = 0; }, 1200);
+      if (presses === 2) {
+        presses = 0;
+        const pass = window.prompt('Admin password:');
+        if (pass === 'whytofearwhenwearehere') {
+          window.location.href = 'admin.html';
+        } else if (pass !== null) {
+          window.alert('Incorrect admin password.');
+        }
+      }
+    }
+  });
+})();
