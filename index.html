@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ember &amp; Ash — Small-Batch Coffee Roastery</title>
-<meta name="description" content="Small-batch coffee, roasted weekly and shipped fresh. Shop single-origin beans and blends from Ember & Ash.">
+<title>Decorative Corner — Handmade Beaded Wall &amp; Door Hangings</title>
+<meta name="description" content="Handmade beaded wall and door hangings with pearl strands and tassels. 100% handmade, premium materials, made for gifting.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -16,7 +16,19 @@
 
 <header class="site-header">
   <div class="wrap">
-    <a class="brand" href="index.html">Ember <span>&amp;</span> Ash</a>
+    <a class="brand" href="index.html">
+      <svg class="logo-mark" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="20" cy="14" r="10" fill="none" stroke="#1c2d4f" stroke-width="2.6"/>
+        <line x1="20" y1="4" x2="20" y2="1" stroke="#1c2d4f" stroke-width="1.4"/>
+        <line x1="13" y1="22" x2="13" y2="37" stroke="#b8923f" stroke-width="1.4"/>
+        <line x1="20" y1="24" x2="20" y2="39" stroke="#b8923f" stroke-width="1.4"/>
+        <line x1="27" y1="22" x2="27" y2="37" stroke="#b8923f" stroke-width="1.4"/>
+        <circle cx="13" cy="28" r="1.6" fill="#b8923f"/>
+        <circle cx="20" cy="31" r="1.6" fill="#b8923f"/>
+        <circle cx="27" cy="28" r="1.6" fill="#b8923f"/>
+      </svg>
+      <span class="brand-name">Decorative<br>Corner</span>
+    </a>
 
     <nav class="main-nav" aria-label="Main">
       <ul>
@@ -49,15 +61,17 @@
   <section class="hero">
     <div class="wrap">
       <div class="hero-copy">
-        <p class="eyebrow">Roasted in small batches, every week</p>
-        <h1>Coffee that tastes like where it came from</h1>
-        <p>We source directly from growers, roast in lots under 20kg, and ship within 48 hours of roasting — so what lands in your cup is close to what left the farm.</p>
+        <p class="eyebrow">Because every detail matters</p>
+        <h1>Handmade beaded hangings for every wall and door</h1>
+        <p>Each piece is wrapped, beaded, and knotted by hand — pearl strands, gold accents, and soft cotton tassels finished one at a time. No two pieces are ever quite identical.</p>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="#shop">Shop the roast</a>
-          <a class="btn btn-ghost" href="#story">Our story</a>
+          <a class="btn btn-primary" href="#shop">Shop the collection</a>
+          <a class="btn btn-outline" href="contact.html">Ask a question</a>
         </div>
       </div>
-      <div class="hero-visual" role="img" aria-label="Bag of freshly roasted coffee beans"></div>
+      <div class="hero-visual">
+        <img src="images/product-azure.jpg" alt="Handmade navy blue beaded wall hanging with pearl strands and tassels" loading="eager">
+      </div>
     </div>
   </section>
 
@@ -65,57 +79,53 @@
     <div class="wrap">
       <div class="section-head">
         <div>
-          <h2>This week's roast</h2>
-          <p>Four lots, released Monday. Once they're gone, they're gone until next season.</p>
+          <h2>The collection</h2>
+          <p>Three current pieces, each handmade and beaded to order.</p>
         </div>
-        <a class="section-link" href="#">View full shop</a>
       </div>
 
-      <ul class="product-grid" role="list">
+      <ul class="product-grid">
         <li class="product-card">
-          <div class="product-photo"><span class="roast-tag">Light roast</span></div>
+          <div class="product-photo">
+            <span class="tag">Wall hanging</span>
+            <img src="images/final-azure.jpg" alt="Navy blue beaded wall hanging with pearl and gold strands and blue tassels" loading="lazy">
+          </div>
           <div class="product-info">
-            <h3>Yirgacheffe</h3>
-            <p class="origin">Ethiopia · Washed</p>
+            <h3>Azure Ring</h3>
+            <p class="meta">Navy thread-wrap ring · pearl &amp; gold beads · cotton tassels</p>
             <div class="product-row">
-              <span class="price">$19</span>
-              <button class="add-btn" type="button" data-product="Yirgacheffe">Add</button>
+              <span class="price">$34</span>
+              <button class="add-btn" type="button" data-product="Azure Ring">Add to cart</button>
             </div>
           </div>
         </li>
 
         <li class="product-card">
-          <div class="product-photo"><span class="roast-tag">Medium roast</span></div>
+          <div class="product-photo">
+            <span class="tag">Wall hanging</span>
+            <img src="images/final-sage.jpg" alt="Sage green beaded wall hanging with pearl strands, gold beads, and pink and sage tassels" loading="lazy">
+          </div>
           <div class="product-info">
-            <h3>Huila</h3>
-            <p class="origin">Colombia · Natural</p>
+            <h3>Sage Bloom</h3>
+            <p class="meta">Sage thread-wrap ring · pearl beads · pink &amp; sage tassels</p>
             <div class="product-row">
-              <span class="price">$18</span>
-              <button class="add-btn" type="button" data-product="Huila">Add</button>
+              <span class="price">$36</span>
+              <button class="add-btn" type="button" data-product="Sage Bloom">Add to cart</button>
             </div>
           </div>
         </li>
 
         <li class="product-card">
-          <div class="product-photo"><span class="roast-tag">Dark roast</span></div>
-          <div class="product-info">
-            <h3>Mandheling</h3>
-            <p class="origin">Sumatra · Wet-hulled</p>
-            <div class="product-row">
-              <span class="price">$20</span>
-              <button class="add-btn" type="button" data-product="Mandheling">Add</button>
-            </div>
+          <div class="product-photo">
+            <span class="tag">Door hanging</span>
+            <img src="images/final-jute.jpg" alt="Jute and green beaded door hanging with pearl strands and natural jute tassels" loading="lazy">
           </div>
-        </li>
-
-        <li class="product-card">
-          <div class="product-photo"><span class="roast-tag">House blend</span></div>
           <div class="product-info">
-            <h3>Ember Blend</h3>
-            <p class="origin">Ethiopia + Brazil</p>
+            <h3>Jute &amp; Ivy</h3>
+            <p class="meta">Natural jute ring · green thread-wrap · pearl &amp; crystal beads</p>
             <div class="product-row">
-              <span class="price">$17</span>
-              <button class="add-btn" type="button" data-product="Ember Blend">Add</button>
+              <span class="price">$32</span>
+              <button class="add-btn" type="button" data-product="Jute & Ivy">Add to cart</button>
             </div>
           </div>
         </li>
@@ -125,48 +135,51 @@
 
   <section id="story" class="story">
     <div class="wrap">
-      <div class="story-visual" role="img" aria-label="Roaster at work in the Ember and Ash roastery"></div>
+      <div class="story-visual">
+        <img src="images/product-jute.jpg" alt="Handmade jute and green door hanging with pearl strands hanging on a wooden door frame" loading="lazy">
+      </div>
       <div class="story-copy">
-        <h2>Started in a garage. Still roasted by hand.</h2>
-        <p>Ember &amp; Ash began in 2019 with a secondhand roaster and a list of farms we wanted to work with directly. Six years on, the roaster's bigger but the approach hasn't changed: pay growers fairly, roast in small lots, and never let a bag sit in a warehouse.</p>
-        <p>Every bag lists the farm, the harvest date, and the roast date — so you always know what you're drinking and how fresh it is.</p>
-        <a class="btn btn-dark" href="contact.html">Talk to us</a>
+        <h2>Every ring wrapped, every bead strung, by hand</h2>
+        <p>Decorative Corner makes one style of piece and does it carefully: a wrapped ring, hand-strung pearl and gold strands, and a hand-knotted tassel. Nothing is machine-assembled — the bead work, the wrapping, and the tassels are all done thread by thread.</p>
+        <p>Pick a piece for your own wall or door, or send one as a gift — each one arrives ready to hang.</p>
+        <a class="btn btn-gold" href="contact.html">Ask about a custom colorway</a>
       </div>
     </div>
   </section>
 
-  <section class="process">
+  <section class="value-props">
     <div class="wrap">
       <div class="section-head">
         <div>
-          <h2>From farm to your door</h2>
+          <h2>Why people choose us</h2>
         </div>
       </div>
-      <ol>
+      <ul>
         <li>
-          <span class="num">01</span>
-          <h3>Sourced direct</h3>
-          <p>We buy directly from growers and cooperatives, at prices set above commodity rate.</p>
+          <h3>100% handmade</h3>
+          <p>Every ring, bead, and tassel is placed by hand — no molded or machine-made pieces.</p>
         </li>
         <li>
-          <span class="num">02</span>
-          <h3>Roasted weekly</h3>
-          <p>Small lots, roasted to order, so nothing sits around losing flavor before it ships.</p>
+          <h3>Premium materials</h3>
+          <p>Glass pearls, gold-tone beads, and natural cotton or jute cord in every piece.</p>
         </li>
         <li>
-          <span class="num">03</span>
-          <h3>Shipped fresh</h3>
-          <p>Out the door within 48 hours of roasting, with the roast date printed on every bag.</p>
+          <h3>Perfect for home decor</h3>
+          <p>Sized for a wall, a door, or a window — hangs from a single hook.</p>
         </li>
-      </ol>
+        <li>
+          <h3>Great for gifting</h3>
+          <p>Arrives ready to hang, with room to add a note for housewarmings and birthdays.</p>
+        </li>
+      </ul>
     </div>
   </section>
 
   <section class="newsletter">
     <div class="wrap">
       <div>
-        <h2>Get notified when new lots drop</h2>
-        <p>One email a week, Monday mornings. No spam, unsubscribe anytime.</p>
+        <h2>New pieces, first look</h2>
+        <p>One email when a new colorway or style is ready. No spam.</p>
       </div>
       <form class="newsletter-form" id="newsletter-form" novalidate>
         <label for="newsletter-email" class="visually-hidden">Email address</label>
@@ -183,15 +196,14 @@
   <div class="wrap">
     <div class="footer-grid">
       <div>
-        <h3>Ember &amp; Ash</h3>
-        <p style="max-width: 32ch; color: var(--bark); font-size: 14px;">Small-batch coffee, roasted weekly and shipped fresh from our roastery.</p>
+        <h3>Decorative Corner</h3>
+        <p style="max-width: 32ch; color: var(--muted); font-size: 14px;">Handmade beaded wall and door hangings, made and packed by hand.</p>
       </div>
       <div>
         <h3>Shop</h3>
         <ul>
-          <li><a href="index.html#shop">All coffee</a></li>
-          <li><a href="index.html#shop">Subscriptions</a></li>
-          <li><a href="index.html#shop">Gift sets</a></li>
+          <li><a href="index.html#shop">All pieces</a></li>
+          <li><a href="contact.html">Custom colorways</a></li>
         </ul>
       </div>
       <div>
@@ -203,8 +215,8 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <span>&copy; 2026 Ember &amp; Ash Coffee Co.</span>
-      <span>Roasted and shipped from Portland, OR</span>
+      <span>&copy; 2026 Decorative Corner</span>
+      <span>Made and packed by hand</span>
     </div>
   </div>
 </footer>
