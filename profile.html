@@ -75,8 +75,10 @@
           <input type="text" id="display-name" name="display-name" placeholder="Jane Doe" autocomplete="name">
         </div>
         <div class="auth-field">
-          <label for="photo-url">Photo URL</label>
-          <input type="url" id="photo-url" name="photo-url" placeholder="https://example.com/me.jpg">
+          <label for="photo-file">Profile photo</label>
+          <input type="file" id="photo-file" name="photo-file" accept="image/png,image/jpeg,image/webp,image/gif">
+          <small class="card-note">Choose a photo from your phone or computer. Maximum size: 5 MB.</small>
+          <input type="hidden" id="photo-url" name="photo-url">
         </div>
         <button class="btn btn-primary" type="submit">Save changes</button>
         <p class="auth-status" id="profile-status" role="status"></p>
@@ -148,9 +150,12 @@
     reauthenticateWithCredential,
     EmailAuthProvider,
   } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+  import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-storage.js";
 
+  const storage = getStorage();
   const nameInput = document.getElementById("display-name");
   const photoInput = document.getElementById("photo-url");
+  const photoFileInput = document.getElementById("photo-file");
   const avatarPreview = document.getElementById("avatar-preview");
   const avatarName = document.getElementById("avatar-name");
   const avatarEmail = document.getElementById("avatar-email");
@@ -198,13 +203,36 @@
     e.preventDefault();
     const status = document.getElementById("profile-status");
     try {
+      if (!currentUser) throw new Error("Please sign in again.");
+
+      let photoURL = photoInput.value.trim() || null;
+      const selectedFile = photoFileInput.files[0];
+
+      if (selectedFile) {
+        if (!selectedFile.type.startsWith("image/")) {
+          throw new Error("Please choose an image file.");
+        }
+        if (selectedFile.size > 5 * 1024 * 1024) {
+          throw new Error("Photo must be 5 MB or smaller.");
+        }
+
+        showStatus(status, "Uploading your photo…", false);
+        const extension = (selectedFile.name.split(".").pop() || "jpg").toLowerCase();
+        const photoRef = ref(storage, `profile-photos/${currentUser.uid}/avatar.${extension}`);
+        await uploadBytes(photoRef, selectedFile, { contentType: selectedFile.type });
+        photoURL = await getDownloadURL(photoRef);
+      }
+
       await updateProfile(currentUser, {
         displayName: nameInput.value.trim() || null,
-        photoURL: photoInput.value.trim() || null,
+        photoURL,
       });
-      avatarPreview.src = photoInput.value.trim() || "images/logo.png";
+
+      photoInput.value = photoURL || "";
+      photoFileInput.value = "";
+      avatarPreview.src = photoURL || "images/logo.png";
       avatarName.textContent = nameInput.value.trim() || "No name set";
-      showStatus(status, "Profile updated.", false);
+      showStatus(status, "Profile updated successfully.", false);
     } catch (err) {
       console.error(err);
       showStatus(status, err.message || "Couldn't save your profile.", true);
