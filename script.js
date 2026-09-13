@@ -29,31 +29,34 @@ function initMobileNav() {
   });
 }
 
-/* ---------- Add to cart (front-end only, no backend wired up) ---------- */
-function initAddToCart() {
-  const buttons = document.querySelectorAll('.add-btn:not([disabled])');
-  let cartCount = 0;
-  const cartBtn = document.querySelector('[aria-label^="Cart"]');
-
-  buttons.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const alreadyAdded = btn.getAttribute('data-added') === 'true';
-      if (alreadyAdded) return;
-
-      btn.setAttribute('data-added', 'true');
-      btn.textContent = 'Added';
-      cartCount += 1;
-      if (cartBtn) {
-        cartBtn.textContent = `Cart (${cartCount})`;
-        cartBtn.setAttribute('aria-label', `Cart, ${cartCount} items`);
-      }
-
-      setTimeout(() => {
-        btn.removeAttribute('data-added');
-        btn.textContent = 'Add to cart';
-      }, 1600);
-    });
-  });
+/* ---------- Persistent cart ---------- */
+const CART_KEY = 'dc-cart';
+const CART_PRODUCTS = {
+  'Blush Ring': { id:'blush-ring', name:'Blush Ring', price:499, image:'images/product-pink.png' },
+  'Azure Ring': { id:'azure-ring', name:'Azure Ring', price:499, image:'images/product-blue.png' },
+  'Ivy Ring': { id:'ivy-ring', name:'Ivy Ring', price:499, image:'images/product-green.png' }
+};
+function readCart(){ try { return JSON.parse(localStorage.getItem(CART_KEY)||'[]'); } catch { return []; } }
+function saveCart(cart){ localStorage.setItem(CART_KEY, JSON.stringify(cart)); updateCartBadge(); }
+function updateCartBadge(){
+  const count=readCart().reduce((sum,item)=>sum+(Number(item.qty)||0),0);
+  document.querySelectorAll('[data-cart-count]').forEach(el=>el.textContent=count);
+  document.querySelectorAll('[data-cart-link]').forEach(el=>el.setAttribute('aria-label',`Shopping bag, ${count} items`));
+}
+function addProduct(name, quantity=1){
+  const product=CART_PRODUCTS[name]; if(!product) return;
+  const cart=readCart(); const existing=cart.find(item=>item.id===product.id);
+  if(existing) existing.qty += quantity;
+  else cart.push({...product, qty:quantity});
+  saveCart(cart);
+}
+function initAddToCart(){
+  document.querySelectorAll('.add-btn:not([disabled])').forEach(btn=>btn.addEventListener('click',()=>{
+    addProduct(btn.dataset.product,1);
+    const old=btn.textContent; btn.textContent='Added'; btn.disabled=true;
+    setTimeout(()=>{btn.textContent=old;btn.disabled=false;},1200);
+  }));
+  updateCartBadge();
 }
 
 /* ---------- Newsletter form ---------- */
