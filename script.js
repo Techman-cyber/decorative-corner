@@ -4,10 +4,15 @@
 
 const WEB3FORMS_ACCESS_KEY = '086bf4c6-f5d8-4aa3-8c28-eb578ea0adb0';
 const WEB3FORMS_ENDPOINT = 'https://api.web3forms.com/submit';
+const EMAILJS_PUBLIC_KEY = 'iqz0F_ZxKI5IhPsib';
+const EMAILJS_SERVICE_ID = 'service_ucbrp5r';
+const EMAILJS_SUBSCRIPTION_TEMPLATE_ID = 'template_ef70okk';
+const EMAILJS_CONTACT_TEMPLATE_ID = 'template_ciivzbg';
 
 document.addEventListener('DOMContentLoaded', () => {
   initMobileNav();
   initAddToCart();
+  if (window.emailjs) emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
   initNewsletterForm();
   initContactForm();
   initCollectionSearch();
@@ -73,12 +78,15 @@ function initNewsletterForm() {
     }
     note.textContent = 'Subscribing…';
     try {
-      await submitWeb3Form({
-        subject: 'New Decorative Corner newsletter subscription',
+      if (!window.emailjs) throw new Error('EmailJS library is unavailable');
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_SUBSCRIPTION_TEMPLATE_ID, {
+        to_email: email,
         email,
-        message: `New newsletter subscriber: ${email}`
+        subscriber_email: email,
+        subject: 'Verify your Decorative Corner subscription',
+        message: 'Please verify your Decorative Corner subscription using the link in this email.'
       });
-      note.textContent = 'You’re subscribed. Thank you!';
+      note.textContent = 'Verification email sent. Please check your inbox.';
       note.style.color = '#b8923f';
       form.reset();
     } catch (error) {
@@ -143,12 +151,19 @@ function initContactForm() {
     status.textContent = 'Sending…';
     status.className = 'form-status';
     try {
-      await submitWeb3Form({
-        subject: fields.topic.el.value,
+      if (!window.emailjs) throw new Error('EmailJS library is unavailable');
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_CONTACT_TEMPLATE_ID, {
         from_name: fields.name.el.value.trim(),
+        from_email: fields.email.el.value.trim(),
         email: fields.email.el.value.trim(),
         replyto: fields.email.el.value.trim(),
-        message: fields.message.el.value.trim()
+        subject: fields.topic.el.value,
+        message: fields.message.el.value.trim(),
+        submitted_at: new Date().toLocaleString('en-IN', {
+          timeZone: 'Asia/Kolkata',
+          dateStyle: 'medium',
+          timeStyle: 'short'
+        })
       });
       status.textContent = "Thanks — your message has been sent. We'll reply within one business day.";
       status.className = 'form-status success';
