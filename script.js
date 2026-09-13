@@ -32,14 +32,20 @@ function initMobileNav() {
 }
 
 /* ---------- Persistent cart ---------- */
+import { auth, db } from './firebase-config.js';
+import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js';
+import { doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js';
+
 const CART_KEY = 'dc-cart';
+let signedInUser = null;
+let cartReady = false;
 const CART_PRODUCTS = {
   'Blush Ring': { id:'blush-ring', name:'Blush Ring', price:125, image:'images/product-pink.png' },
   'Azure Ring': { id:'azure-ring', name:'Azure Ring', price:125, image:'images/product-blue.png' },
   'Ivy Ring': { id:'ivy-ring', name:'Ivy Ring', price:125, image:'images/product-green.png' }
 };
 function readCart(){ try { return JSON.parse(localStorage.getItem(CART_KEY)||'[]'); } catch { return []; } }
-function saveCart(cart){ localStorage.setItem(CART_KEY, JSON.stringify(cart)); updateCartBadge(); }
+function saveCart(cart){ localStorage.setItem(CART_KEY, JSON.stringify(cart)); updateCartBadge(); if (signedInUser && cartReady) setDoc(doc(db,'users',signedInUser.uid), {cart, cartUpdatedAt:new Date().toISOString()}, {merge:true}).catch(console.error); }
 function updateCartBadge(){
   const count=readCart().reduce((sum,item)=>sum+(Number(item.qty)||0),0);
   document.querySelectorAll('[data-cart-count]').forEach(el=>el.textContent=count);
@@ -52,6 +58,14 @@ function addProduct(name, quantity=1){
   else cart.push({...product, qty:quantity});
   saveCart(cart);
 }
+onAuthStateChanged(auth, async (user) => {
+  signedInUser = user;
+  if (user) {
+    try { const snap = await getDoc(doc(db,'users',user.uid)); const data = snap.exists() ? snap.data() : {}; if (Array.isArray(data.cart)) localStorage.setItem(CART_KEY, JSON.stringify(data.cart)); } catch(e) { console.error('Cart restore failed:', e); }
+  }
+  cartReady = true; updateCartBadge();
+});
+
 function initAddToCart(){
   document.querySelectorAll('.add-btn:not([disabled])').forEach(btn=>btn.addEventListener('click',()=>{
     addProduct(btn.dataset.product,1);
