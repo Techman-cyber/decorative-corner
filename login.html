@@ -94,6 +94,8 @@
     onAuthStateChanged,
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
+    sendEmailVerification,
+    signOut,
     signInWithPopup,
     GoogleAuthProvider,
     OAuthProvider,
@@ -178,9 +180,21 @@
 
     try {
       if (mode === "signin") {
-        await signInWithEmailAndPassword(auth, email, password);
+        const credential = await signInWithEmailAndPassword(auth, email, password);
+        if (!credential.user.emailVerified) {
+          await signOut(auth);
+          status.className = "auth-status error";
+          status.textContent = "Please verify your email first. Check your inbox or spam folder.";
+          return;
+        }
       } else {
-        await createUserWithEmailAndPassword(auth, email, password);
+        const credential = await createUserWithEmailAndPassword(auth, email, password);
+        await sendEmailVerification(credential.user);
+        await signOut(auth);
+        status.className = "auth-status success";
+        status.textContent = "Account created. Verification email sent — verify it before signing in.";
+        setMode("signin");
+        return;
       }
       location.replace(next);
     } catch (err) {

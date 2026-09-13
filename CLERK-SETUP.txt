@@ -1,0 +1,7 @@
+Clerk publishable key has been added to clerk-config.js.
+
+Important:
+- This is only the publishable key.
+- Never put the pvt_ secret key in frontend files.
+- Existing Firebase authentication has not been removed in this package.
+- Full Clerk migration requires replacing the current Firebase Auth login/session code.
