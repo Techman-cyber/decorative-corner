@@ -34,9 +34,9 @@ function initMobileNav() {
 /* ---------- Persistent cart ---------- */
 const CART_KEY = 'dc-cart';
 const CART_PRODUCTS = {
-  'Blush Ring': { id:'blush-ring', name:'Blush Ring', price:499, image:'images/product-pink.png' },
-  'Azure Ring': { id:'azure-ring', name:'Azure Ring', price:499, image:'images/product-blue.png' },
-  'Ivy Ring': { id:'ivy-ring', name:'Ivy Ring', price:499, image:'images/product-green.png' }
+  'Blush Ring': { id:'blush-ring', name:'Blush Ring', price:125, image:'images/product-pink.png' },
+  'Azure Ring': { id:'azure-ring', name:'Azure Ring', price:125, image:'images/product-blue.png' },
+  'Ivy Ring': { id:'ivy-ring', name:'Ivy Ring', price:125, image:'images/product-green.png' }
 };
 function readCart(){ try { return JSON.parse(localStorage.getItem(CART_KEY)||'[]'); } catch { return []; } }
 function saveCart(cart){ localStorage.setItem(CART_KEY, JSON.stringify(cart)); updateCartBadge(); }

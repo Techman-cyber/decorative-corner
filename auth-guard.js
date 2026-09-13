@@ -18,9 +18,6 @@ onAuthStateChanged(auth, (user) => {
   document.documentElement.classList.remove("auth-checking");
 
   // Fill in any "who's signed in" placeholders in the header.
-  document.querySelectorAll("[data-user-email]").forEach((el) => {
-    el.textContent = user.email || user.displayName || "Account";
-  });
 });
 
 // Wire up any logout button on the page (header, menu, etc.)
