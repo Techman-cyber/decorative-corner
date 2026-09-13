@@ -2,7 +2,13 @@
 // Decorative Corner — shared site behavior
 // ============================================
 
+const EMAILJS_PUBLIC_KEY = 'iqz0F_ZxKI5IhPsib';
+const EMAILJS_SERVICE_ID = 'service_d2poslb';
+const CONTACT_TEMPLATE_ID = 'template_ciivzbg';
+const SUBSCRIPTION_TEMPLATE_ID = 'template_ef70okk';
+
 document.addEventListener('DOMContentLoaded', () => {
+  if (window.emailjs && EMAILJS_PUBLIC_KEY && !EMAILJS_PUBLIC_KEY.startsWith('PASTE_')) { emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY }); }
   initMobileNav();
   initAddToCart();
   initNewsletterForm();
@@ -57,20 +63,26 @@ function initNewsletterForm() {
   const note = document.getElementById('newsletter-note');
   const emailInput = document.getElementById('newsletter-email');
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = emailInput.value.trim();
-
     if (!isValidEmail(email)) {
       note.textContent = 'Please enter a valid email address.';
       note.style.color = '#b5502e';
       return;
     }
-
-    // No backend connected yet — this just confirms the input locally.
-    note.textContent = `Thanks — we'll let you know at ${email} when new pieces launch.`;
-    note.style.color = '#b8923f';
-    form.reset();
+    if (!window.emailjs) { note.textContent = 'Email service is unavailable. Please try again later.'; return; }
+    note.textContent = 'Subscribing…';
+    try {
+      await emailjs.send(EMAILJS_SERVICE_ID, SUBSCRIPTION_TEMPLATE_ID, { email });
+      note.textContent = 'You’re subscribed. Thank you!';
+      note.style.color = '#b8923f';
+      form.reset();
+    } catch (error) {
+      console.error('Newsletter error:', error);
+      note.textContent = 'Subscription failed. Please try again later.';
+      note.style.color = '#b5502e';
+    }
   });
 }
 
@@ -93,7 +105,7 @@ function initContactForm() {
     el.addEventListener('change', () => row.classList.remove('has-error'));
   });
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     let hasError = false;
 
@@ -125,11 +137,28 @@ function initContactForm() {
       return;
     }
 
-    // No backend connected yet — swap this for a real fetch() call to your
-    // form endpoint (e.g. Formspree, a serverless function, your own API).
-    status.textContent = "Thanks — your message is in. We'll reply within one business day.";
-    status.className = 'form-status success';
-    form.reset();
+    if (!window.emailjs) {
+      status.textContent = 'Email service is unavailable. Please email us directly.';
+      status.className = 'form-status error';
+      return;
+    }
+    status.textContent = 'Sending…';
+    status.className = 'form-status';
+    try {
+      await emailjs.send(EMAILJS_SERVICE_ID, CONTACT_TEMPLATE_ID, {
+        from_name: fields.name.el.value.trim(),
+        from_email: fields.email.el.value.trim(),
+        subject: fields.topic.el.value,
+        message: fields.message.el.value.trim()
+      });
+      status.textContent = "Thanks — your message has been sent. We'll reply within one business day.";
+      status.className = 'form-status success';
+      form.reset();
+    } catch (error) {
+      console.error('Contact form error:', error);
+      status.textContent = 'Could not send your message. Please try again later.';
+      status.className = 'form-status error';
+    }
   });
 }
 
