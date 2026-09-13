@@ -855,3 +855,15 @@ html.auth-checking body { visibility: hidden; }
 #collection-search{max-width:280px;width:100%;padding:12px 14px;border:1px solid #d8cbb9;border-radius:10px;background:#fff}
 .delete-review{margin-left:10px;border:0;background:transparent;color:#b5502e;cursor:pointer;font-size:12px}
 .bag-icon{display:inline-flex;align-items:center;justify-content:center;font-size:1.1em;margin-right:4px}.bag-label{font-weight:600}.header-actions .icon-btn{white-space:nowrap}.cart-page{max-width:900px;margin:50px auto;padding:20px}.cart-row{display:flex;gap:18px;align-items:center;border-bottom:1px solid #ddd;padding:18px 0}.cart-row img{width:90px;height:90px;object-fit:cover;border-radius:12px}.cart-row input{width:65px;padding:8px}.cart-total{font-size:22px;font-weight:700;text-align:right;margin:25px 0}.empty{text-align:center;padding:50px;color:#777}
+/* Improved shopping bag controls */
+.cart-row{background:var(--paper,#fff);border:1px solid var(--line,#e5e1da);border-radius:18px;padding:18px;margin:14px 0;align-items:center;box-shadow:0 8px 24px rgba(40,30,20,.05)}
+.cart-row .cart-details{flex:1;min-width:0}
+.cart-row h3{margin:0 0 6px}
+.cart-row .quantity-control{display:inline-flex;align-items:center;gap:8px;margin-top:10px}
+.cart-row .quantity-control label{font-size:13px;color:var(--muted,#777)}
+.cart-row input[type=number]{width:76px;border:1px solid var(--line,#ddd);border-radius:10px;padding:9px 8px;background:transparent;color:inherit;font:inherit}
+.cart-row input[type=number]:focus{outline:2px solid var(--gold,#b58b45);outline-offset:2px}
+.cart-row [data-remove]{border:1px solid #c96d63;background:transparent;color:#a84e46;border-radius:999px;padding:9px 14px;font:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:.2s}
+.cart-row [data-remove]:hover{background:#a84e46;color:#fff}
+.cart-row [data-remove]:focus-visible{outline:2px solid var(--gold,#b58b45);outline-offset:3px}
+@media(max-width:560px){.cart-row{display:grid;grid-template-columns:72px 1fr;gap:12px}.cart-row img{width:72px;height:72px}.cart-row [data-remove]{grid-column:1/-1;justify-self:start}.cart-row .quantity-control{flex-wrap:wrap}}
