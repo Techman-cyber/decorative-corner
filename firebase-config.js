@@ -1,35 +1,68 @@
 // ============================================
-// Firebase setup
+// Decorative Corner - Firebase Configuration
 // ============================================
-// 1. Go to https://console.firebase.google.com → create/open your project.
-// 2. Project settings (gear icon) → General → "Your apps" → Add app → Web (</>).
-// 3. Copy the firebaseConfig object it gives you and paste the values below.
-// 4. In the left sidebar go to Build → Authentication → Get started, then
-//    enable the "Email/Password" and "Google" sign-in providers.
-// 5. For "Apple", you'll also need an Apple Developer account: create a
-//    Services ID + Sign in with Apple key at developer.apple.com, then paste
-//    those into the Apple provider screen in Firebase. Apple sign-in simply
-//    won't work until that's done — Google and Email/Password don't need it.
-// 6. Authentication → Settings → Authorized domains → add the domain you'll
-//    host this site on (localhost is already allowed for local testing).
-// 7. IMPORTANT: Google/Apple pop-up sign-in will not work if you open these
-//    HTML files directly (file:// in the address bar). Serve the folder with
-//    a local server, e.g. `npx serve .` or VS Code's "Live Server", and open
-//    it via http://localhost.
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+
+import {
+  getAuth
+} from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+
+import {
+  getFirestore
+} from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+import {
+  getDatabase
+} from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
+
+import {
+  getAnalytics,
+  isSupported
+} from "https://www.gstatic.com/firebasejs/10.13.0/firebase-analytics.js";
+
+// ============================================
+// Firebase project configuration
+// ============================================
 
 const firebaseConfig = {
   apiKey: "AIzaSyBwOA143HmGuEesTfPtbAaCwM_oI4G1kfU",
   authDomain: "decorative-corner.firebaseapp.com",
+  databaseURL: "https://decorative-corner-default-rtdb.firebaseio.com",
   projectId: "decorative-corner",
   storageBucket: "decorative-corner.firebasestorage.app",
   messagingSenderId: "5254377508",
-  appId: "1:5254377508:web:0031ec5d9c7d143dbba8b1"
+  appId: "1:5254377508:web:0031ec5d9c7d143dbba8b1",
+  measurementId: "G-7FE8N3XKDN"
 };
 
+// ============================================
+// Initialize Firebase
+// ============================================
+
 const app = initializeApp(firebaseConfig);
+
+// Authentication
 export const auth = getAuth(app);
-import { getFirestore } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+// Cloud Firestore
 export const db = getFirestore(app);
+
+// Realtime Database
+export const database = getDatabase(app);
+
+// Analytics
+export let analytics = null;
+
+isSupported()
+  .then((supported) => {
+    if (supported) {
+      analytics = getAnalytics(app);
+    }
+  })
+  .catch((error) => {
+    console.warn("Firebase Analytics unavailable:", error);
+  });
+
+// Export app as well
+export { app };
