@@ -2,13 +2,10 @@
 // Decorative Corner — shared site behavior
 // ============================================
 
-const EMAILJS_PUBLIC_KEY = 'iqz0F_ZxKI5IhPsib';
-const EMAILJS_SERVICE_ID = 'service_d2poslb';
-const CONTACT_TEMPLATE_ID = 'template_ciivzbg';
-const SUBSCRIPTION_TEMPLATE_ID = 'template_ef70okk';
+const WEB3FORMS_ACCESS_KEY = '086bf4c6-f5d8-4aa3-8c28-eb578ea0adb0';
+const WEB3FORMS_ENDPOINT = 'https://api.web3forms.com/submit';
 
 document.addEventListener('DOMContentLoaded', () => {
-  if (window.emailjs && EMAILJS_PUBLIC_KEY && !EMAILJS_PUBLIC_KEY.startsWith('PASTE_')) { emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY }); }
   initMobileNav();
   initAddToCart();
   initNewsletterForm();
@@ -74,10 +71,13 @@ function initNewsletterForm() {
       note.style.color = '#b5502e';
       return;
     }
-    if (!window.emailjs) { note.textContent = 'Email service is unavailable. Please try again later.'; return; }
     note.textContent = 'Subscribing…';
     try {
-      await emailjs.send(EMAILJS_SERVICE_ID, SUBSCRIPTION_TEMPLATE_ID, { email });
+      await submitWeb3Form({
+        subject: 'New Decorative Corner newsletter subscription',
+        email,
+        message: `New newsletter subscriber: ${email}`
+      });
       note.textContent = 'You’re subscribed. Thank you!';
       note.style.color = '#b8923f';
       form.reset();
@@ -140,18 +140,14 @@ function initContactForm() {
       return;
     }
 
-    if (!window.emailjs) {
-      status.textContent = 'Email service is unavailable. Please email us directly.';
-      status.className = 'form-status error';
-      return;
-    }
     status.textContent = 'Sending…';
     status.className = 'form-status';
     try {
-      await emailjs.send(EMAILJS_SERVICE_ID, CONTACT_TEMPLATE_ID, {
-        from_name: fields.name.el.value.trim(),
-        from_email: fields.email.el.value.trim(),
+      await submitWeb3Form({
         subject: fields.topic.el.value,
+        from_name: fields.name.el.value.trim(),
+        email: fields.email.el.value.trim(),
+        replyto: fields.email.el.value.trim(),
         message: fields.message.el.value.trim()
       });
       status.textContent = "Thanks — your message has been sent. We'll reply within one business day.";
@@ -163,6 +159,26 @@ function initContactForm() {
       status.className = 'form-status error';
     }
   });
+}
+
+
+async function submitWeb3Form(fields) {
+  const response = await fetch(WEB3FORMS_ENDPOINT, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+    body: JSON.stringify({
+      access_key: WEB3FORMS_ACCESS_KEY,
+      ...fields
+    })
+  });
+  const result = await response.json();
+  if (!response.ok || !result.success) {
+    throw new Error(result.message || 'Web3Forms submission failed');
+  }
+  return result;
 }
 
 /* ---------- Shared helpers ---------- */
