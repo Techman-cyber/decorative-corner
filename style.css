@@ -275,6 +275,8 @@ section { padding: 76px 0; }
 
 .product-card {
   background: #fff;
+  cursor: pointer;
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
   border-radius: 4px;
   overflow: hidden;
   display: flex;
@@ -855,3 +857,5 @@ html.auth-checking body { visibility: hidden; }
 #collection-search{max-width:280px;width:100%;padding:12px 14px;border:1px solid #d8cbb9;border-radius:10px;background:#fff}
 .delete-review{margin-left:10px;border:0;background:transparent;color:#b5502e;cursor:pointer;font-size:12px}
 .bag-icon{display:inline-flex;align-items:center;justify-content:center;font-size:1.1em;margin-right:4px}.bag-label{font-weight:600}.header-actions .icon-btn{white-space:nowrap}.cart-page{max-width:900px;margin:50px auto;padding:20px}.cart-row{display:flex;gap:18px;align-items:center;border-bottom:1px solid #ddd;padding:18px 0}.cart-row img{width:90px;height:90px;object-fit:cover;border-radius:12px}.cart-row input{width:65px;padding:8px}.cart-total{font-size:22px;font-weight:700;text-align:right;margin:25px 0}.empty{text-align:center;padding:50px;color:#777}
+
+.product-card:focus-visible{outline:3px solid var(--gold);outline-offset:4px}.product-card:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(45,34,24,.10);border-color:var(--gold)}.product-card .add-btn{position:relative;z-index:2}.product-card h3 a{position:relative;z-index:2}

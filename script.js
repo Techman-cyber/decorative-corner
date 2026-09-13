@@ -247,7 +247,22 @@ function isValidEmail(value) {
 
 function initCollectionSearch(){
   const input=document.getElementById('collection-search');
-  if(!input)return;
-  const cards=[...document.querySelectorAll('.product-card')];
-  input.addEventListener('input',()=>{const term=input.value.trim().toLowerCase();cards.forEach(card=>{card.hidden=!!term&&!card.textContent.toLowerCase().includes(term);});});
+  if(input){
+    const cards=[...document.querySelectorAll('.product-card')];
+    input.addEventListener('input',()=>{const term=input.value.trim().toLowerCase();cards.forEach(card=>{card.hidden=!!term&&!card.textContent.toLowerCase().includes(term);});});
+  }
+  document.querySelectorAll('.product-card').forEach(card=>{
+    card.setAttribute('tabindex','0');
+    card.setAttribute('role','link');
+    const link=card.querySelector('h3 a');
+    if(!link)return;
+    const open=()=>{window.location.href=link.href;};
+    card.addEventListener('click',e=>{
+      if(e.target.closest('button, a'))return;
+      open();
+    });
+    card.addEventListener('keydown',e=>{
+      if((e.key==='Enter'||e.key===' ') && !e.target.closest('button,a')){e.preventDefault();open();}
+    });
+  });
 }
