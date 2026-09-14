@@ -88,34 +88,148 @@
   </div>
 </div>
 
-<script async crossorigin="anonymous" data-clerk-publishable-key="pk_live_Y2xlcmsudGVjaG1hbi1jeWJlci5naXRodWIuaW8k" src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
-<script>
+<script type="module">
+  import { auth } from "./firebase-config.js";
+  import {
+    onAuthStateChanged,
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
+    signInWithPopup,
+    GoogleAuthProvider,
+    OAuthProvider,
+    sendPasswordResetEmail,
+  } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+
   const params = new URLSearchParams(location.search);
   const next = params.get("next") || "index.html";
-  const status = document.getElementById("auth-status");
-  const signin = document.getElementById("tab-signin");
-  const signup = document.getElementById("tab-signup");
+
+  // Already signed in? Skip straight to the site instead of showing the form.
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      location.replace(next);
+    } else {
+      document.documentElement.classList.remove("auth-checking");
+    }
+  });
+
+  const tabSignin = document.getElementById("tab-signin");
+  const tabSignup = document.getElementById("tab-signup");
   const heading = document.getElementById("auth-heading");
   const subtitle = document.getElementById("auth-subtitle");
+  const submitBtn = document.getElementById("email-submit");
+  const status = document.getElementById("auth-status");
+  const form = document.getElementById("email-form");
+  const emailInput = document.getElementById("email");
+  const passwordInput = document.getElementById("password");
+  const forgotBtn = document.getElementById("forgot-password");
+
   let mode = "signin";
-  function message(text, type="") { status.textContent=text; status.className="auth-status"+(type?" "+type:""); }
-  function setMode(m) { mode=m; const sign=m==='signin'; signin.setAttribute('aria-selected',String(sign)); signup.setAttribute('aria-selected',String(!sign)); heading.textContent=sign?'Welcome back':'Create your account'; subtitle.textContent=sign?'Sign in to keep browsing.':'Takes less than a minute.'; }
-  signin.addEventListener('click',()=>setMode('signin')); signup.addEventListener('click',()=>setMode('signup'));
-  async function start() {
-    if (!window.Clerk) { message('Authentication is still loading. Please refresh in a moment.','error'); document.documentElement.classList.remove('auth-checking'); return; }
-    const clerk = new window.Clerk("pk_live_Y2xlcmsudGVjaG1hbi1jeWJlci5naXRodWIuaW8k");
-    await clerk.load();
-    if (clerk.user) { location.replace(next); return; }
-    document.documentElement.classList.remove('auth-checking');
-    document.getElementById('email-form').style.display='none';
-    document.querySelector('.auth-divider').style.display='none';
-    document.getElementById('google-signin').style.display='none';
-    document.getElementById('apple-signin').style.display='none';
-    const mount=document.createElement('div'); mount.id='clerk-auth-mount'; document.getElementById('email-form').after(mount);
-    clerk.mountSignIn(mount, { afterSignInUrl: next, signUpUrl: location.pathname+'?mode=signup&next='+encodeURIComponent(next) });
-    if (params.get('mode')==='signup') { mount.innerHTML=''; clerk.mountSignUp(mount,{afterSignUpUrl:next}); setMode('signup'); }
+
+  function setMode(newMode) {
+    mode = newMode;
+    const isSignin = mode === "signin";
+    tabSignin.setAttribute("aria-selected", String(isSignin));
+    tabSignup.setAttribute("aria-selected", String(!isSignin));
+    heading.textContent = isSignin ? "Welcome back" : "Create your account";
+    subtitle.textContent = isSignin ? "Sign in to keep browsing." : "Takes less than a minute.";
+    submitBtn.textContent = isSignin ? "Sign in" : "Create account";
+    passwordInput.autocomplete = isSignin ? "current-password" : "new-password";
+    status.textContent = "";
+    status.className = "auth-status";
   }
-  start().catch(err=>{console.error(err); document.documentElement.classList.remove('auth-checking'); message('Clerk could not load. Check your Clerk production domain settings.','error');});
+
+  tabSignin.addEventListener("click", () => setMode("signin"));
+  tabSignup.addEventListener("click", () => setMode("signup"));
+
+  function showError(err) {
+    console.error("Auth error:", err);
+    status.className = "auth-status error";
+    status.textContent = friendlyError(err);
+  }
+
+  function friendlyError(err) {
+    const code = err && err.code;
+    switch (code) {
+      case "auth/invalid-email": return "That email address doesn't look right.";
+      case "auth/user-not-found":
+      case "auth/wrong-password":
+      case "auth/invalid-credential": return "Email or password is incorrect.";
+      case "auth/email-already-in-use": return "An account already exists with that email — try signing in instead.";
+      case "auth/weak-password": return "Password should be at least 6 characters.";
+      case "auth/popup-closed-by-user": return "The sign-in popup was closed before finishing.";
+      case "auth/popup-blocked": return "Your browser blocked the sign-in popup — allow popups for this site and try again.";
+      case "auth/cancelled-popup-request": return "Only one sign-in popup can be open at a time.";
+      case "auth/unauthorized-domain": return "This domain isn't authorized in Firebase yet (Authentication → Settings → Authorized domains).";
+      case "auth/operation-not-allowed": return "This sign-in method isn't enabled yet in the Firebase console (Authentication → Sign-in method).";
+      case "auth/network-request-failed": return "Network error — check your connection and try again.";
+      case "auth/configuration-not-found": return "Firebase config looks incomplete — check firebase-config.js has your real project values.";
+      default: return `Something went wrong${code ? " (" + code + ")" : ""}. Check the browser console for details.`;
+    }
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    status.textContent = "";
+    status.className = "auth-status";
+    submitBtn.disabled = true;
+
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+
+    try {
+      if (mode === "signin") {
+        await signInWithEmailAndPassword(auth, email, password);
+      } else {
+        await createUserWithEmailAndPassword(auth, email, password);
+      }
+      location.replace(next);
+    } catch (err) {
+      showError(err);
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+
+  forgotBtn.addEventListener("click", async () => {
+    const email = emailInput.value.trim();
+    if (!email) {
+      status.className = "auth-status error";
+      status.textContent = "Enter your email above first, then tap \"Forgot password?\".";
+      return;
+    }
+    try {
+      await sendPasswordResetEmail(auth, email);
+      status.className = "auth-status success";
+      status.textContent = `Password reset email sent to ${email}.`;
+    } catch (err) {
+      showError(err);
+    }
+  });
+
+  document.getElementById("google-signin").addEventListener("click", async () => {
+    status.textContent = "";
+    status.className = "auth-status";
+    try {
+      await signInWithPopup(auth, new GoogleAuthProvider());
+      location.replace(next);
+    } catch (err) {
+      showError(err);
+    }
+  });
+
+  document.getElementById("apple-signin").addEventListener("click", async () => {
+    status.textContent = "";
+    status.className = "auth-status";
+    try {
+      const provider = new OAuthProvider("apple.com");
+      provider.addScope("email");
+      provider.addScope("name");
+      await signInWithPopup(auth, provider);
+      location.replace(next);
+    } catch (err) {
+      showError(err);
+    }
+  });
 </script>
 </body>
 </html>
