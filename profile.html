@@ -123,7 +123,7 @@
 
     <section class="profile-card" id="sso-note" hidden>
       <h2>Signed in with a provider</h2>
-      <p class="card-note">You signed in with Google, so there's no separate site password to manage here — email and password changes happen with that provider directly.</p>
+      <p class="card-note">You signed in with Google or Apple, so there's no separate site password to manage here — email and password changes happen with that provider directly.</p>
     </section>
   </div>
 </main>
@@ -189,7 +189,7 @@
     const hasPasswordProvider = user.providerData.some((p) => p.providerId === "password");
     const providerLabel = user.providerData.map((p) => {
       if (p.providerId === "google.com") return "Google";
-      if (p.providerId === "apple.com") return "phone provider";
+      if (p.providerId === "apple.com") return "Apple";
       if (p.providerId === "password") return "Email/password";
       return p.providerId;
     }).join(" · ");
