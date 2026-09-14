@@ -88,7 +88,7 @@
   </div>
 </div>
 
-<script async crossorigin="anonymous" data-clerk-publishable-key="pk_live_Y2xlcmsudGVjaG1hbi1jeWJlci5naXRodWIuaW8k" src="https://clerk.techman-cyber.github.io/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
+<script async crossorigin="anonymous" data-clerk-publishable-key="pk_live_Y2xlcmsudGVjaG1hbi1jeWJlci5naXRodWIuaW8k" src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
 <script>
   const params = new URLSearchParams(location.search);
   const next = params.get("next") || "index.html";
@@ -103,16 +103,17 @@
   signin.addEventListener('click',()=>setMode('signin')); signup.addEventListener('click',()=>setMode('signup'));
   async function start() {
     if (!window.Clerk) { message('Authentication is still loading. Please refresh in a moment.','error'); document.documentElement.classList.remove('auth-checking'); return; }
-    await Clerk.load();
-    if (Clerk.user) { location.replace(next); return; }
+    const clerk = new window.Clerk("pk_live_Y2xlcmsudGVjaG1hbi1jeWJlci5naXRodWIuaW8k");
+    await clerk.load();
+    if (clerk.user) { location.replace(next); return; }
     document.documentElement.classList.remove('auth-checking');
     document.getElementById('email-form').style.display='none';
     document.querySelector('.auth-divider').style.display='none';
     document.getElementById('google-signin').style.display='none';
     document.getElementById('apple-signin').style.display='none';
     const mount=document.createElement('div'); mount.id='clerk-auth-mount'; document.getElementById('email-form').after(mount);
-    Clerk.mountSignIn(mount, { afterSignInUrl: next, signUpUrl: location.pathname+'?mode=signup&next='+encodeURIComponent(next) });
-    if (params.get('mode')==='signup') { mount.innerHTML=''; Clerk.mountSignUp(mount,{afterSignUpUrl:next}); setMode('signup'); }
+    clerk.mountSignIn(mount, { afterSignInUrl: next, signUpUrl: location.pathname+'?mode=signup&next='+encodeURIComponent(next) });
+    if (params.get('mode')==='signup') { mount.innerHTML=''; clerk.mountSignUp(mount,{afterSignUpUrl:next}); setMode('signup'); }
   }
   start().catch(err=>{console.error(err); document.documentElement.classList.remove('auth-checking'); message('Clerk could not load. Check your Clerk production domain settings.','error');});
 </script>
