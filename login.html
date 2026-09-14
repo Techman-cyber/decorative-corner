@@ -56,18 +56,27 @@
 
     <div class="auth-divider">or</div>
 
-    <button class="btn-google" type="button" id="phone-signin" style="margin-top:14px;">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="9" y1="18" x2="15" y2="18"/></svg>
-      Continue with Phone Number
-    </button>
-
-    <div class="auth-field" id="phone-auth-panel" style="margin-top:14px; display:none;">
-      <label for="phone-number">Phone number</label>
-      <input type="tel" id="phone-number" placeholder="+91 9876543210" autocomplete="tel">
-      <button class="btn btn-primary btn-block" type="button" id="send-phone-code" style="margin-top:8px;">Send SMS code</button>
-      <input type="text" id="phone-code" inputmode="numeric" placeholder="Enter SMS code" autocomplete="one-time-code" style="display:none;margin-top:8px;">
-      <button class="btn btn-primary btn-block" type="button" id="verify-phone-code" style="display:none;margin-top:8px;">Verify phone & sign in</button>
-      <div id="recaptcha-container" style="margin-top:10px;"></div>
+    <div class="phone-entry" id="phone-entry">
+      <button class="btn-google" type="button" id="phone-toggle" aria-expanded="false">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2"></rect><path d="M10 18h4"></path></svg>
+        Continue with Phone Number
+      </button>
+      <div id="phone-panel" hidden>
+        <div class="auth-field">
+          <label for="phone-number-local">Phone number</label>
+          <div class="phone-fixed-prefix" style="display:flex;align-items:center;border:1px solid #d9d9d9;border-radius:8px;background:#fff;overflow:hidden;">
+            <span aria-hidden="true" style="padding:0 12px;color:#6b7280;font-size:16px;border-right:1px solid #e5e7eb;">+91</span>
+            <input type="tel" id="phone-number-local" inputmode="numeric" maxlength="10" pattern="[0-9]{10}" placeholder="9876543210" autocomplete="tel-national" style="border:0;outline:0;flex:1;min-width:0;border-radius:0;">
+          </div>
+        </div>
+        <button class="btn btn-primary btn-block" type="button" id="send-sms">Send SMS code</button>
+        <div id="recaptcha-container" style="margin-top:14px;"></div>
+        <div class="auth-field" id="sms-code-wrap" hidden>
+          <label for="sms-code">SMS code</label>
+          <input type="text" id="sms-code" inputmode="numeric" autocomplete="one-time-code" placeholder="Enter 6-digit code">
+        </div>
+        <button class="btn btn-primary btn-block" type="button" id="verify-sms" hidden>Verify phone number</button>
+      </div>
     </div>
 
     <button class="btn-google" type="button" id="google-signin">
@@ -83,7 +92,7 @@
     <p class="auth-footer-note">By continuing you agree to be nice to our beads.</p>
 
     <details style="margin-top: 16px; font-size: 12px; color: var(--muted);">
-      <summary style="cursor: pointer;">Google/Phone sign-in not working?</summary>
+      <summary style="cursor: pointer;">Google/phone sign-in not working?</summary>
       <ul style="padding-left: 18px; margin: 10px 0 0; line-height: 1.6;">
         <li>Open this site over <code>http://</code> or <code>https://</code> (e.g. a local dev server) — not by double-clicking the HTML file, since Google pop-ups refuse to run from a <code>file://</code> page.</li>
         <li>In the Firebase console, confirm Google and Phone are turned <strong>on</strong> under Authentication → Sign-in method.</li>
@@ -101,12 +110,13 @@
     onAuthStateChanged,
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
+    sendEmailVerification,
+    signOut,
     signInWithPopup,
     GoogleAuthProvider,
-    OAuthProvider,
-    sendPasswordResetEmail,
     RecaptchaVerifier,
     signInWithPhoneNumber,
+    sendPasswordResetEmail,
   } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
 
   const params = new URLSearchParams(location.search);
@@ -131,31 +141,6 @@
   const emailInput = document.getElementById("email");
   const passwordInput = document.getElementById("password");
   const forgotBtn = document.getElementById("forgot-password");
-  const phoneInput = document.getElementById("phone-number");
-  const phoneCode = document.getElementById("phone-code");
-  const sendPhoneBtn = document.getElementById("send-phone-code");
-  const verifyPhoneBtn = document.getElementById("verify-phone-code");
-  let phoneConfirmation = null;
-  let recaptcha = null;
-
-  function setupRecaptcha() {
-    if (recaptcha) return;
-    recaptcha = new RecaptchaVerifier(auth, "recaptcha-container", {
-      size: "normal",
-      callback: () => {},
-      "expired-callback": () => { recaptcha = null; }
-    });
-    recaptcha.render().catch(showError);
-  }
-  setupRecaptcha();
-
-  document.getElementById("phone-signin").addEventListener("click", () => {
-    const panel = document.getElementById("phone-auth-panel");
-    const isHidden = panel.style.display === "none";
-    panel.style.display = isHidden ? "block" : "none";
-    document.getElementById("phone-signin").setAttribute("aria-expanded", String(isHidden));
-    if (isHidden) phoneInput.focus();
-  });
 
   let mode = "signin";
 
@@ -212,9 +197,21 @@
 
     try {
       if (mode === "signin") {
-        await signInWithEmailAndPassword(auth, email, password);
+        const credential = await signInWithEmailAndPassword(auth, email, password);
+        if (!credential.user.emailVerified) {
+          await signOut(auth);
+          status.className = "auth-status error";
+          status.textContent = "Please verify your email first. Check your inbox or spam folder.";
+          return;
+        }
       } else {
-        await createUserWithEmailAndPassword(auth, email, password);
+        const credential = await createUserWithEmailAndPassword(auth, email, password);
+        await sendEmailVerification(credential.user);
+        await signOut(auth);
+        status.className = "auth-status success";
+        status.textContent = "Account created. Verification email sent — verify it before signing in.";
+        setMode("signin");
+        return;
       }
       location.replace(next);
     } catch (err) {
@@ -240,40 +237,6 @@
     }
   });
 
-
-  sendPhoneBtn.addEventListener("click", async () => {
-    const phone = phoneInput.value.trim();
-    if (!/^\+[1-9]\d{7,14}$/.test(phone)) {
-      status.className = "auth-status error";
-      status.textContent = "Enter a valid phone number with country code, e.g. +919876543210.";
-      return;
-    }
-    sendPhoneBtn.disabled = true;
-    try {
-      if (!recaptcha) setupRecaptcha();
-      phoneConfirmation = await signInWithPhoneNumber(auth, phone, recaptcha);
-      phoneCode.style.display = "block";
-      verifyPhoneBtn.style.display = "block";
-      status.className = "auth-status success";
-      status.textContent = "SMS code sent. Enter it below.";
-    } catch (err) {
-      showError(err);
-      if (recaptcha) { recaptcha.clear(); recaptcha = null; }
-      setupRecaptcha();
-    } finally { sendPhoneBtn.disabled = false; }
-  });
-
-  verifyPhoneBtn.addEventListener("click", async () => {
-    const code = phoneCode.value.trim();
-    if (!phoneConfirmation || !code) return;
-    verifyPhoneBtn.disabled = true;
-    try {
-      await phoneConfirmation.confirm(code);
-      location.replace(next);
-    } catch (err) { showError(err); }
-    finally { verifyPhoneBtn.disabled = false; }
-  });
-
   document.getElementById("google-signin").addEventListener("click", async () => {
     status.textContent = "";
     status.className = "auth-status";
@@ -283,6 +246,67 @@
     } catch (err) {
       showError(err);
     }
+  });
+
+  let confirmationResult = null;
+  let recaptchaVerifier = null;
+  const phoneToggle = document.getElementById("phone-toggle");
+  const phonePanel = document.getElementById("phone-panel");
+  const phoneNumber = document.getElementById("phone-number-local");
+  const sendSms = document.getElementById("send-sms");
+  const smsCodeWrap = document.getElementById("sms-code-wrap");
+  const smsCode = document.getElementById("sms-code");
+  const verifySms = document.getElementById("verify-sms");
+
+  phoneToggle.addEventListener("click", () => {
+    phonePanel.hidden = !phonePanel.hidden;
+    phoneToggle.setAttribute("aria-expanded", String(!phonePanel.hidden));
+    if (!phonePanel.hidden && !recaptchaVerifier) {
+      recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
+        size: "normal",
+        callback: () => { status.textContent = "reCAPTCHA completed. You can send the SMS code."; },
+        "expired-callback": () => { status.textContent = "reCAPTCHA expired. Please complete it again."; }
+      });
+      recaptchaVerifier.render().catch(showError);
+    }
+  });
+
+  sendSms.addEventListener("click", async () => {
+    const localNumber = phoneNumber.value.replace(/\D/g, "");
+    phoneNumber.value = localNumber.slice(0, 10);
+    const phone = "+91" + phoneNumber.value;
+    if (!/^[6-9]\d{9}$/.test(localNumber)) {
+      status.className = "auth-status error";
+      status.textContent = "Enter your 10-digit Indian mobile number. +91 is fixed automatically.";
+      return;
+    }
+    sendSms.disabled = true;
+    try {
+      if (!recaptchaVerifier) throw new Error("Please open the phone sign-in section first.");
+      confirmationResult = await signInWithPhoneNumber(auth, phone, recaptchaVerifier);
+      smsCodeWrap.hidden = false;
+      verifySms.hidden = false;
+      status.className = "auth-status success";
+      status.textContent = "SMS code sent. Enter it below.";
+    } catch (err) {
+      showError(err);
+      if (recaptchaVerifier) { recaptchaVerifier.clear(); recaptchaVerifier = null; }
+    } finally { sendSms.disabled = false; }
+  });
+
+  verifySms.addEventListener("click", async () => {
+    const code = smsCode.value.trim();
+    if (!confirmationResult || !code) {
+      status.className = "auth-status error";
+      status.textContent = "Enter the SMS code first.";
+      return;
+    }
+    verifySms.disabled = true;
+    try {
+      await confirmationResult.confirm(code);
+      location.replace(next);
+    } catch (err) { showError(err); }
+    finally { verifySms.disabled = false; }
   });
 </script>
 </body>
