@@ -66,9 +66,11 @@ onAuthStateChanged(auth, async (user) => {
   cartReady = true; updateCartBadge();
 });
 
+function showToast(msg){let t=document.getElementById('dc-toast');if(!t){t=document.createElement('div');t.id='dc-toast';t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1c2d4f;color:#fbf7ee;padding:12px 22px;border-radius:999px;font:600 14px/1.2 Inter,-apple-system,sans-serif;box-shadow:0 12px 30px rgba(28,45,79,.35);z-index:9999;opacity:0;transition:opacity .25s ease, transform .25s ease;pointer-events:none;';document.body.appendChild(t);}t.textContent=msg;t.style.opacity='1';t.style.transform='translateX(-50%) translateY(-6px)';clearTimeout(showToast._t);showToast._t=setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(-50%)';},2200);}
 function initAddToCart(){
   document.querySelectorAll('.add-btn:not([disabled])').forEach(btn=>btn.addEventListener('click',()=>{
     addProduct(btn.dataset.product,1);
+    showToast(`${btn.dataset.product} is in your cart now ✓`);
     const old=btn.textContent; btn.textContent='Added'; btn.disabled=true;
     setTimeout(()=>{btn.textContent=old;btn.disabled=false;},1200);
   }));
@@ -92,16 +94,8 @@ function initNewsletterForm() {
     }
     note.textContent = 'Subscribing…';
     try {
-      if (!window.emailjs) throw new Error('EmailJS library is unavailable');
-      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_SUBSCRIPTION_TEMPLATE_ID, {
-        to_email: email,
-        email,
-        subscriber_email: email,
-        subject: 'Verify your Decorative Corner subscription',
-        message: 'Please verify your Decorative Corner subscription using the link in this email.'
-      });
-      note.textContent = 'Verification email sent. Please check your inbox.';
-      note.style.color = '#b8923f';
+      note.textContent = 'Thank you very much for subscribing! Updates will be mailed to you.';
+      note.style.color = '#3f6b3f';
       form.reset();
     } catch (error) {
       console.error('Newsletter error:', error);
