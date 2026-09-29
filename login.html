@@ -121,12 +121,20 @@
   } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
 
   const params = new URLSearchParams(location.search);
-  const next = params.get("next") || "index.html";
+
+  // Where to send them after a successful sign-in.
+  // Priority: ?next= in the URL → sessionStorage fallback → index.html
+  function postLoginDestination() {
+    const next   = params.get("next");
+    const stored = sessionStorage.getItem("dc-redirect-after-login");
+    sessionStorage.removeItem("dc-redirect-after-login");
+    return next || stored || "index.html";
+  }
 
   // Already signed in? Skip straight to the site instead of showing the form.
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      location.replace(next);
+      location.replace(postLoginDestination());
     } else {
       document.documentElement.classList.remove("auth-checking");
     }
@@ -160,6 +168,13 @@
 
   tabSignin.addEventListener("click", () => setMode("signin"));
   tabSignup.addEventListener("click", () => setMode("signup"));
+
+  // Honour ?mode=signup on page load (used by the header dropdown "Sign up" link)
+  if (params.get("mode") === "signup") {
+    setMode("signup");
+  } else {
+    setMode("signin");
+  }
 
   function showError(err) {
     console.error("Auth error:", err);
@@ -214,7 +229,7 @@
         setMode("signin");
         return;
       }
-      location.replace(next);
+      location.replace(postLoginDestination());
     } catch (err) {
       showError(err);
     } finally {
@@ -243,7 +258,7 @@
     status.className = "auth-status";
     try {
       await signInWithPopup(auth, new GoogleAuthProvider());
-      location.replace(next);
+      location.replace(postLoginDestination());
     } catch (err) {
       showError(err);
     }
@@ -317,7 +332,7 @@
     try {
       verifySmsBtn.disabled = true;
       await confirmationResult.confirm(smsInput.value.trim());
-      location.replace(next);
+      location.replace(postLoginDestination());
     } catch (err) {
       showPhoneError(err);
     } finally {
