@@ -1,16 +1,345 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Shopping Bag — Decorative Corner</title><link rel="stylesheet" href="style.css"><link rel="icon" href="favicon.ico"><style>
-.cart-row{display:flex;align-items:flex-start;gap:22px;margin:18px 0;padding:22px;border:1px solid #e8dfd6;border-radius:16px;background:#fffdf9}
-.cart-row img{width:112px;height:112px;flex:0 0 112px;object-fit:cover;border-radius:12px}
-.cart-details{flex:1;min-width:0}
-.cart-row h3{margin:0 0 8px;font-size:22px}
-.cart-row p{margin:0 0 14px;font-size:18px}
-.cart-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.cart-qty{display:inline-flex;align-items:center;gap:14px}
-.cart-qty button{width:42px;height:42px;border:1px solid #d8cfc5;background:#fff;border-radius:10px;font-size:24px;line-height:1;cursor:pointer}
-.cart-qty button:hover{background:#f4eee7}
-.cart-qty output{min-width:20px;text-align:center;font-size:18px;font-weight:700}
-.cart-remove{height:42px;border:1px solid #c94b4b;background:#fff;color:#a51d1d;border-radius:10px;padding:0 18px;font-size:15px;cursor:pointer}
-.cart-remove:hover{background:#fff0f0}
-.cart-total{font-size:20px;font-weight:800;margin:24px 0}.empty{text-align:center;padding:42px 20px;border:1px dashed #d8cfc5;border-radius:16px;background:#fffdf9}.empty h2{margin:0 0 8px}.empty p{margin:0 0 20px;color:#6d6258}
-@media(max-width:520px){.cart-row{gap:14px;padding:14px}.cart-row img{width:78px;height:78px;flex-basis:78px}.cart-row h3{font-size:18px}.cart-row p{font-size:16px}.cart-qty button,.cart-remove{height:38px}.cart-qty button{width:38px}}
-</style></head><body><main class="cart-page"><a href="index.html">← Continue shopping</a><h1>Your shopping bag</h1><div id="items"></div><div id="total" class="cart-total"></div><p id="checkout-note"></p><a class="btn btn-primary" href="checkout.html">Buy now</a></main><script type="module">import { auth, db } from './firebase-config.js'; import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js'; import { doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js'; let signedInUser=null; window.__dcSyncCartToCloud=function(cart){ if(!signedInUser) return; setDoc(doc(db,'users',signedInUser.uid),{cart,cartUpdatedAt:new Date().toISOString()},{merge:true}).catch(console.error); }; onAuthStateChanged(auth, async user => { signedInUser=user; if(user){ try{ const localCart=JSON.parse(localStorage.getItem('dc-cart')||'[]'); if(!localCart.length){ const snap=await getDoc(doc(db,'users',user.uid)); const d=snap.exists()?snap.data():{}; if(Array.isArray(d.cart)&&d.cart.length){localStorage.setItem('dc-cart',JSON.stringify(d.cart)); if(window.__dcRenderCart) window.__dcRenderCart();} } }catch(e){console.error(e);} } });</script><script>const KEY='dc-cart';const money=n=>'₹'+Number(n||0).toLocaleString('en-IN');function get(){return JSON.parse(localStorage.getItem(KEY)||'[]')}function put(c){localStorage.setItem(KEY,JSON.stringify(c));if(window.__dcSyncCartToCloud)window.__dcSyncCartToCloud(c);render()}function render(){const c=get(),el=document.getElementById('items');if(!c.length){el.innerHTML='<div class="empty"><h2>Your bag is empty</h2><p>Looks like you haven’t added anything yet.</p><a class="btn btn-primary" href="index.html#shop">Shop now</a></div>';document.getElementById('total').textContent='';document.querySelector('.cart-page > .btn-primary').style.display='none';return}document.querySelector('.cart-page > .btn-primary').style.display='inline-flex';el.innerHTML=c.map((x,i)=>`<div class="cart-row"><img src="${x.image}" alt="${x.name}"><div class="cart-details"><h3>${x.name}</h3><p>${money(125)}</p><div class="cart-actions"><div class="cart-qty" aria-label="Quantity for ${x.name}"><button type="button" data-minus="${i}" aria-label="Decrease quantity">−</button><output>${Math.max(1,Number(x.qty)||1)}</output><button type="button" data-plus="${i}" aria-label="Increase quantity">+</button></div><button type="button" class="cart-remove" data-remove="${i}">Remove</button></div></div></div>`).join('');document.getElementById('total').textContent='Total: '+money(c.reduce((s,x)=>s+125*(Math.max(1,Number(x.qty)||1)),0));document.querySelectorAll('[data-minus]').forEach(b=>b.addEventListener('click',()=>{const c=get(),i=Number(b.dataset.minus);c[i].qty=Math.max(1,(Number(c[i].qty)||1)-1);put(c)}));document.querySelectorAll('[data-plus]').forEach(b=>b.addEventListener('click',()=>{const c=get(),i=Number(b.dataset.plus);c[i].qty=(Number(c[i].qty)||1)+1;put(c)}));document.querySelectorAll('[data-remove]').forEach(b=>b.addEventListener('click',()=>{const c=get(),i=Number(b.dataset.remove);c.splice(i,1);put(c)}))}window.__dcRenderCart=render;render();</script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your cart — Decorative Corner</title>
+<meta name="description" content="Review your handmade beaded hangings before checkout.">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="192x192" href="images/favicon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="images/favicon-512.png">
+<link rel="apple-touch-icon" href="images/favicon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .cart-wrap { max-width: 900px; margin: 40px auto 60px; padding: 0 20px; }
+  .cart-wrap h1 { font-family: Fraunces, serif; font-size: 30px; color: #17233d; margin: 0 0 6px; }
+  .cart-wrap p.sub { color: #8a8578; font-size: 14px; margin: 0 0 26px; }
+  .cart-list { list-style: none; padding: 0; margin: 0 0 26px; display: grid; gap: 14px; }
+  .cart-item {
+    display: grid;
+    grid-template-columns: 84px 1fr auto;
+    gap: 16px;
+    align-items: center;
+    background: #fffdf9;
+    border: 1px solid #e6dccd;
+    border-radius: 14px;
+    padding: 14px;
+  }
+  .cart-item img { width: 84px; height: 84px; object-fit: cover; border-radius: 10px; background: #f7f3ed; }
+  .cart-item h3 { margin: 0 0 4px; font-size: 15px; color: #17233d; }
+  .cart-item .price { font-size: 13px; color: #8a8578; }
+  .cart-item .line-total { font-weight: 700; color: #17233d; font-size: 15px; }
+  .cart-item .qty-row { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+  .cart-item .qty-row button {
+    width: 30px; height: 30px; border-radius: 8px; border: 1px solid #d8cfc5;
+    background: #fffdf9; cursor: pointer; font-size: 16px; font-weight: 700; color: #17233d;
+  }
+  .cart-item .qty-row button:hover { background: #f4ece0; }
+  .cart-item .qty-row span { min-width: 22px; text-align: center; font-weight: 600; }
+  .cart-item .remove {
+    background: none; border: 0; color: #b5502e; font-size: 12px;
+    cursor: pointer; margin-top: 6px; padding: 0;
+  }
+  .cart-summary {
+    background: #fffdf9;
+    border: 1px solid #e6dccd;
+    border-radius: 14px;
+    padding: 20px 22px;
+  }
+  .cart-summary .row {
+    display: flex; justify-content: space-between; padding: 7px 0;
+    font-size: 14px; color: #4a4438;
+  }
+  .cart-summary .row.total {
+    border-top: 1px solid #efe6d8; margin-top: 10px; padding-top: 14px;
+    font-size: 18px; font-weight: 700; color: #17233d;
+  }
+  .cart-actions {
+    display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px;
+  }
+  .cart-empty {
+    background: #fffdf9; border: 1px dashed #e6dccd; border-radius: 14px;
+    padding: 40px 20px; text-align: center; color: #8a8578;
+  }
+  .cart-empty a { color: #17233d; font-weight: 600; }
+  .btn { padding: 13px 24px; border-radius: 10px; font-weight: 600; font-size: 14px; text-decoration: none; border: none; cursor: pointer; }
+  .btn-primary { background: #17233d; color: #fbf7ee; }
+  .btn-primary:hover { background: #0f1a2f; }
+  .btn-outline { background: transparent; border: 1px solid #d8cfc5; color: #17233d; }
+  .btn-outline:hover { background: #f4ece0; }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <img class="logo-mark" src="images/logo.png" alt="Decorative Corner logo">
+      <span class="brand-name">Decorative<br>Corner</span>
+    </a>
+
+    <nav class="main-nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#shop">Shop</a></li>
+        <li><a href="index.html#story">Our Story</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="header-actions">
+      <div class="profile-menu" id="profile-menu">
+        <button class="icon-btn profile-trigger" type="button"
+                id="profile-trigger"
+                aria-haspopup="true"
+                aria-expanded="false"
+                aria-label="Account menu">
+          <span class="user-icon" aria-hidden="true">👤</span>
+          <span class="user-label" data-user-label>Account</span>
+        </button>
+
+        <div class="profile-dropdown" id="profile-dropdown" hidden>
+          <div data-auth="out">
+            <a href="login.html" class="dropdown-item">Log in</a>
+            <a href="login.html?mode=signup" class="dropdown-item dropdown-item--primary">Sign up</a>
+          </div>
+          <div data-auth="in" hidden>
+            <div class="dropdown-header">
+              <span class="dropdown-name" data-user-name>Customer</span>
+              <span class="dropdown-email" data-user-email></span>
+            </div>
+            <a href="profile.html" class="dropdown-item">My profile</a>
+            <a href="cart.html" class="dropdown-item">My cart</a>
+            <button type="button" class="dropdown-item dropdown-item--danger" data-logout>Log out</button>
+          </div>
+        </div>
+      </div>
+
+      <a class="icon-btn" href="cart.html" aria-label="Shopping bag, 0 items" data-cart-link>
+        <span class="bag-icon" aria-hidden="true">♧</span>
+        <span class="bag-label">Bag</span> (<span data-cart-count>0</span>)
+      </a>
+
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav">Menu</button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <div class="cart-wrap">
+    <h1>Your cart</h1>
+    <p class="sub">Review your pieces before checkout.</p>
+
+    <div id="cart-content">
+      <div class="cart-empty" id="cart-empty" hidden>
+        Your cart is empty. <a href="index.html#shop">Browse the collection →</a>
+      </div>
+
+      <ul class="cart-list" id="cart-list"></ul>
+
+      <div class="cart-summary" id="cart-summary" hidden>
+        <div class="row"><span>Subtotal</span><span id="sum-subtotal">₹0</span></div>
+        <div class="row"><span>Shipping</span><span>Calculated at checkout</span></div>
+        <div class="row total"><span>Total</span><span id="sum-total">₹0</span></div>
+
+        <div class="cart-actions">
+          <a class="btn btn-outline" href="index.html#shop">Continue shopping</a>
+          <button class="btn btn-primary" type="button" id="order-now-btn" data-requires-auth>
+            Order Now →
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-bottom">
+      <span>&copy; 2026 Decorative Corner</span>
+      <span>Made and packed by hand</span>
+    </div>
+  </div>
+</footer>
+
+<script type="module">
+import { auth } from './firebase-config.js';
+import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js';
+
+const CART_KEY = 'dc-cart';
+const listEl    = document.getElementById('cart-list');
+const emptyEl   = document.getElementById('cart-empty');
+const summaryEl = document.getElementById('cart-summary');
+const subtotalEl = document.getElementById('sum-subtotal');
+const totalEl    = document.getElementById('sum-total');
+
+let currentUser = null;
+onAuthStateChanged(auth, (u) => { currentUser = u; });
+
+/* ---------- Profile dropdown (mirrors index/script.js) ---------- */
+const trigger  = document.getElementById('profile-trigger');
+const dropdown = document.getElementById('profile-dropdown');
+if (trigger && dropdown) {
+  trigger.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const open = !dropdown.hidden;
+    dropdown.hidden = open;
+    trigger.setAttribute('aria-expanded', String(!open));
+  });
+  document.addEventListener('click', (e) => {
+    if (!dropdown.hidden && !dropdown.contains(e.target) && e.target !== trigger) {
+      dropdown.hidden = true;
+      trigger.setAttribute('aria-expanded', 'false');
+    }
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { dropdown.hidden = true; trigger.setAttribute('aria-expanded', 'false'); }
+  });
+}
+
+function renderDropdown(user) {
+  const inView  = document.querySelector('[data-auth="in"]');
+  const outView = document.querySelector('[data-auth="out"]');
+  const label   = document.querySelector('[data-user-label]');
+  const nameEl  = document.querySelector('[data-user-name]');
+  const emailEl = document.querySelector('[data-user-email]');
+  if (!inView || !outView) return;
+  if (user) {
+    inView.hidden = false; outView.hidden = true;
+    if (label)   label.textContent   = (user.displayName || 'Account').split(' ')[0];
+    if (nameEl)  nameEl.textContent  = user.displayName || 'Customer';
+    if (emailEl) emailEl.textContent = user.email || '';
+  } else {
+    inView.hidden = true; outView.hidden = false;
+    if (label) label.textContent = 'Account';
+  }
+}
+onAuthStateChanged(auth, renderDropdown);
+
+/* ---------- Toast ---------- */
+function showToast(msg) {
+  let t = document.getElementById('dc-toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'dc-toast';
+    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1c2d4f;color:#fbf7ee;padding:12px 22px;border-radius:999px;font:600 14px/1.2 Inter,-apple-system,sans-serif;box-shadow:0 12px 30px rgba(28,45,79,.35);z-index:9999;opacity:0;transition:opacity .25s ease, transform .25s ease;pointer-events:none;';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.opacity = '1';
+  t.style.transform = 'translateX(-50%) translateY(-6px)';
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => {
+    t.style.opacity = '0';
+    t.style.transform = 'translateX(-50%)';
+  }, 2400);
+}
+
+/* ---------- Render cart ---------- */
+function readCart() {
+  try { return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); } catch { return []; }
+}
+function writeCart(cart) {
+  localStorage.setItem(CART_KEY, JSON.stringify(cart));
+  updateBadge();
+}
+function updateBadge() {
+  const count = readCart().reduce((s, i) => s + (Number(i.qty) || 0), 0);
+  document.querySelectorAll('[data-cart-count]').forEach(el => el.textContent = count);
+}
+
+function renderCart() {
+  const cart = readCart();
+  updateBadge();
+
+  if (!cart.length) {
+    listEl.innerHTML = '';
+    summaryEl.hidden = true;
+    emptyEl.hidden = false;
+    return;
+  }
+  emptyEl.hidden = true;
+  summaryEl.hidden = false;
+
+  listEl.innerHTML = cart.map((item, idx) => `
+    <li class="cart-item">
+      <img src="${item.image}" alt="${escapeHtml(item.name)}">
+      <div>
+        <h3>${escapeHtml(item.name)}</h3>
+        <div class="price">₹${item.price} each</div>
+        <div class="qty-row">
+          <button type="button" data-minus="${idx}" aria-label="Decrease quantity">−</button>
+          <span>${item.qty}</span>
+          <button type="button" data-plus="${idx}" aria-label="Increase quantity">+</button>
+        </div>
+        <button class="remove" type="button" data-remove="${idx}">Remove</button>
+      </div>
+      <div class="line-total">₹${item.price * item.qty}</div>
+    </li>
+  `).join('');
+
+  const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  subtotalEl.textContent = '₹' + subtotal;
+  totalEl.textContent    = '₹' + subtotal;
+}
+
+function escapeHtml(v = '') {
+  return String(v).replace(/[&<>"']/g, c => (
+    { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]
+  ));
+}
+
+/* ---------- Cart actions ---------- */
+listEl.addEventListener('click', (e) => {
+  const cart = readCart();
+  const minus  = e.target.closest('[data-minus]');
+  const plus   = e.target.closest('[data-plus]');
+  const remove = e.target.closest('[data-remove]');
+
+  if (minus) {
+    const i = Number(minus.dataset.minus);
+    cart[i].qty = Math.max(1, cart[i].qty - 1);
+    writeCart(cart); renderCart();
+  } else if (plus) {
+    const i = Number(plus.dataset.plus);
+    cart[i].qty += 1;
+    writeCart(cart); renderCart();
+  } else if (remove) {
+    const i = Number(remove.dataset.remove);
+    cart.splice(i, 1);
+    writeCart(cart); renderCart();
+  }
+});
+
+/* ---------- Order Now — login gate ---------- */
+document.getElementById('order-now-btn').addEventListener('click', (e) => {
+  e.preventDefault();
+  if (!currentUser) {
+    sessionStorage.setItem('dc-redirect-after-login', location.href);
+    showToast('You have to log in first to place your order.');
+    // pulse the profile icon
+    const t = document.getElementById('profile-trigger');
+    if (t) {
+      t.style.transition = 'transform .15s ease';
+      t.style.transform = 'scale(1.15)';
+      setTimeout(() => { t.style.transform = ''; }, 450);
+    }
+    return;
+  }
+  // Logged in → go to checkout
+  location.href = 'checkout.html';
+});
+
+/* ---------- Init ---------- */
+renderCart();
+</script>
+
+<script type="module" src="firebase-config.js"></script>
+<script type="module" src="auth-guard.js"></script>
+</body>
+</html>
