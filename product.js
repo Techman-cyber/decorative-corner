@@ -69,7 +69,6 @@ document.getElementById('add').addEventListener('click', () => {
   const user = auth.currentUser;
 
   if (!user) {
-    // Remember where they were, then send to login
     sessionStorage.setItem('dc-redirect-after-login', location.href);
     const next = encodeURIComponent('product.html' + location.search);
     location.href = `login.html?next=${next}`;
