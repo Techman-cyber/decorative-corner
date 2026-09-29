@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Decorative Corner — Handmade Beaded Wall &amp; Door Hangings</title>
-<meta name="description" content="Handmade beaded wall and door hangings with pearl strands and tassels. 100% handmade, premium materials, made for gifting.">
+<title>Log in or Sign up — Decorative Corner</title>
+<meta name="description" content="Log in or create an account to shop handmade beaded hangings from Decorative Corner.">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="192x192" href="images/favicon-192.png">
 <link rel="icon" type="image/png" sizes="512x512" href="images/favicon-512.png">
@@ -13,6 +13,152 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<style>
+  .auth-wrap {
+    max-width: 440px;
+    margin: 40px auto 60px;
+    padding: 0 20px;
+  }
+  .auth-card {
+    background: #fffdf9;
+    border: 1px solid #e6dccd;
+    border-radius: 18px;
+    padding: 32px 28px;
+    box-shadow: 0 18px 40px rgba(28, 45, 79, 0.08);
+  }
+  .auth-card h1 {
+    margin: 0 0 6px;
+    font-family: Fraunces, serif;
+    font-size: 26px;
+    color: #17233d;
+  }
+  .auth-card p.sub {
+    margin: 0 0 22px;
+    color: #8a8578;
+    font-size: 14px;
+  }
+  .auth-tabs {
+    display: flex;
+    gap: 4px;
+    background: #f4ece0;
+    padding: 4px;
+    border-radius: 10px;
+    margin-bottom: 22px;
+  }
+  .auth-tab {
+    flex: 1;
+    padding: 9px 12px;
+    border: none;
+    background: transparent;
+    border-radius: 7px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #6b6458;
+    cursor: pointer;
+    transition: background .15s ease, color .15s ease;
+  }
+  .auth-tab.active {
+    background: #fffdf9;
+    color: #17233d;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06);
+  }
+  .auth-field {
+    margin-bottom: 16px;
+  }
+  .auth-field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #4a4438;
+    margin-bottom: 6px;
+  }
+  .auth-field input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #d8cfc5;
+    border-radius: 10px;
+    font-size: 15px;
+    font-family: inherit;
+    background: #fffdf9;
+    box-sizing: border-box;
+    transition: border-color .15s ease;
+  }
+  .auth-field input:focus {
+    outline: none;
+    border-color: #17233d;
+  }
+  .auth-submit {
+    width: 100%;
+    padding: 14px;
+    background: #17233d;
+    color: #fbf7ee;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 6px;
+    transition: background .15s ease;
+  }
+  .auth-submit:hover { background: #0f1a2f; }
+  .auth-submit:disabled { opacity: .6; cursor: not-allowed; }
+  .auth-status {
+    margin-top: 14px;
+    font-size: 13px;
+    min-height: 18px;
+    text-align: center;
+  }
+  .auth-status.error   { color: #b5502e; }
+  .auth-status.success { color: #3f6b3f; }
+  .auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 22px 0;
+    color: #b3a898;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .auth-divider::before,
+  .auth-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #efe6d8;
+  }
+  .auth-google {
+    width: 100%;
+    padding: 12px;
+    background: #fffdf9;
+    border: 1px solid #d8cfc5;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #17233d;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: background .15s ease;
+  }
+  .auth-google:hover { background: #f8f2e6; }
+  .auth-footer {
+    text-align: center;
+    font-size: 12px;
+    color: #8a8578;
+    margin-top: 20px;
+  }
+  .auth-back {
+    display: inline-block;
+    margin-bottom: 18px;
+    color: #6b6458;
+    font-size: 14px;
+    text-decoration: none;
+  }
+  .auth-back:hover { color: #17233d; }
+</style>
 </head>
 <body>
 
@@ -24,208 +170,245 @@
       <img class="logo-mark" src="images/logo.png" alt="Decorative Corner logo">
       <span class="brand-name">Decorative<br>Corner</span>
     </a>
-
-    <nav class="main-nav" aria-label="Main">
-      <ul>
-        <li><a href="index.html" aria-current="page">Home</a></li>
-        <li><a href="index.html#shop">Shop</a></li>
-        <li><a href="index.html#story">Our Story</a></li>
-        <li><a href="contact.html">Contact</a></li>
-        <li><a href="profile.html">Profile</a></li>
-      </ul>
-    </nav>
-
-    <div class="header-actions">
-      <a class="icon-btn" href="cart.html" aria-label="Shopping bag, 0 items" data-cart-link><span class="bag-icon" aria-hidden="true">♧</span><span class="bag-label">Bag</span> (<span data-cart-count>0</span>)</a>
-      
-      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav">Menu</button>
-    </div>
   </div>
-
-  <nav id="mobile-nav" class="mobile-nav" aria-label="Mobile" hidden>
-    <ul>
-      <li><a href="index.html">Home</a></li>
-      <li><a href="index.html#shop">Shop</a></li>
-      <li><a href="index.html#story">Our Story</a></li>
-      <li><a href="contact.html">Contact</a></li>
-      <li><a href="profile.html">Profile</a></li>
-    </ul>
-  </nav>
 </header>
 
 <main id="main">
+  <div class="auth-wrap">
 
-  <section class="hero">
-    <div class="wrap">
-      <div class="hero-copy">
-        <p class="eyebrow">Because every detail matters</p>
-        <h1>Handmade beaded hangings for every wall and door</h1>
-        <p>Each piece is wrapped, beaded, and knotted by hand — pearl strands, gold accents, and soft cotton tassels finished one at a time. No two pieces are ever quite identical.</p>
-        <div class="hero-actions">
-          <a class="btn btn-primary" href="#shop">Shop the collection</a>
-          <a class="btn btn-outline" href="contact.html">Ask a question</a>
+    <a class="auth-back" href="index.html">← Back to shop</a>
+
+    <div class="auth-card">
+      <h1 id="auth-title">Welcome back</h1>
+      <p class="sub" id="auth-subtitle">Log in to continue your order.</p>
+
+      <div class="auth-tabs" role="tablist">
+        <button class="auth-tab active" type="button" data-tab="login" role="tab" aria-selected="true">Log in</button>
+        <button class="auth-tab"        type="button" data-tab="signup" role="tab" aria-selected="false">Sign up</button>
+      </div>
+
+      <form id="auth-form" novalidate>
+
+        <div class="auth-field" id="row-name" hidden>
+          <label for="auth-name">Your name</label>
+          <input type="text" id="auth-name" name="name" autocomplete="name" placeholder="Jane Doe">
         </div>
-      </div>
-      <div class="hero-visual">
-        <!-- PLACEHOLDER: replace with your best hero shot -->
-        <img src="images/product-blue.png" alt="Handmade beaded wall hanging" loading="eager">
-      </div>
-    </div>
-  </section>
 
-  <section id="shop">
-    <div class="wrap">
-      <div class="section-head">
-        <div>
-          <h2>The collection</h2>
-          <p>Three current pieces, each handmade and beaded to order.</p>
+        <div class="auth-field" id="row-email">
+          <label for="auth-email">Email</label>
+          <input type="email" id="auth-email" name="email" autocomplete="email" placeholder="you@email.com" required>
         </div>
-      </div>
 
-      <ul class="product-grid">
-        <!-- PLACEHOLDER PRODUCT 1 — swap images/product-pink.png + edit name/price/description -->
-        <li class="product-card">
-          <div class="product-photo">
-            <span class="tag">Wall hanging</span>
-            <img src="images/product-pink.png" alt="Pink beaded wall hanging — replace with real product photo" loading="lazy">
-          </div>
-          <div class="product-info">
-            <h3><a href="product.html?name=Blush%20Ring">Blush Ring</a></h3>
-            <p class="meta">Edit this description to match the real piece</p>
-            <div class="product-row">
-              <span class="price">₹125</span>
-              <button class="add-btn" type="button" data-product="Blush Ring">Add to cart</button>
-            </div>
-          </div>
-        </li>
-
-        <!-- PLACEHOLDER PRODUCT 2 — swap images/product-blue.png + edit name/price/description -->
-        <li class="product-card">
-          <div class="product-photo">
-            <span class="tag">Wall hanging</span>
-            <img src="images/product-blue.png" alt="Blue beaded wall hanging — replace with real product photo" loading="lazy">
-          </div>
-          <div class="product-info">
-            <h3><a href="product.html?name=Azure%20Ring">Azure Ring</a></h3>
-            <p class="meta">Edit this description to match the real piece</p>
-            <div class="product-row">
-              <span class="price">₹125</span>
-              <button class="add-btn" type="button" data-product="Azure Ring">Add to cart</button>
-            </div>
-          </div>
-        </li>
-
-        <!-- PLACEHOLDER PRODUCT 3 — swap images/product-green.png + edit name/price/description -->
-        <li class="product-card">
-          <div class="product-photo">
-            <span class="tag">Wall hanging</span>
-            <img src="images/product-green.png" alt="Green beaded wall hanging — replace with real product photo" loading="lazy">
-          </div>
-          <div class="product-info">
-            <h3><a href="product.html?name=Ivy%20Ring">Ivy Ring</a></h3>
-            <p class="meta">Edit this description to match the real piece</p>
-            <div class="product-row">
-              <span class="price">₹125</span>
-              <button class="add-btn" type="button" data-product="Ivy Ring">Add to cart</button>
-            </div>
-          </div>
-        </li>
-      </ul>
-    </div>
-  </section>
-
-  <section id="story" class="story">
-    <div class="wrap">
-      <div class="story-visual">
-        <!-- PLACEHOLDER: replace with a studio / process photo -->
-        <img src="images/product-green.png" alt="Handmade wall hanging" loading="lazy">
-      </div>
-      <div class="story-copy">
-        <h2>Every ring wrapped, every bead strung, by hand</h2>
-        <p>Decorative Corner makes one style of piece and does it carefully: a wrapped ring, hand-strung pearl and gold strands, and a hand-knotted tassel. Nothing is machine-assembled — the bead work, the wrapping, and the tassels are all done thread by thread.</p>
-        <p>Pick a piece for your own wall or door, or send one as a gift — each one arrives ready to hang.</p>
-        <a class="btn btn-gold" href="contact.html">Ask about a custom colorway</a>
-      </div>
-    </div>
-  </section>
-
-  <section class="value-props">
-    <div class="wrap">
-      <div class="section-head">
-        <div>
-          <h2>Why people choose us</h2>
+        <div class="auth-field" id="row-password">
+          <label for="auth-password">Password</label>
+          <input type="password" id="auth-password" name="password" autocomplete="current-password" placeholder="At least 6 characters" required>
         </div>
-      </div>
-      <ul>
-        <li>
-          <h3>100% handmade</h3>
-          <p>Every ring, bead, and tassel is placed by hand — no molded or machine-made pieces.</p>
-        </li>
-        <li>
-          <h3>Premium materials</h3>
-          <p>Glass pearls, gold-tone beads, and natural cotton or jute cord in every piece.</p>
-        </li>
-        <li>
-          <h3>Perfect for home decor</h3>
-          <p>Sized for a wall, a door, or a window — hangs from a single hook.</p>
-        </li>
-        <li>
-          <h3>Great for gifting</h3>
-          <p>Arrives ready to hang, with room to add a note for housewarmings and birthdays.</p>
-        </li>
-      </ul>
-    </div>
-  </section>
 
-  <section class="newsletter">
-    <div class="wrap">
-      <div>
-        <h2>New pieces, first look</h2>
-        <p>One email when a new colorway or style is ready. No spam.</p>
-      </div>
-      <form class="newsletter-form" id="newsletter-form" novalidate>
-        <label for="newsletter-email" class="visually-hidden">Email address</label>
-        <input type="email" id="newsletter-email" name="email" placeholder="you@email.com" required>
-        <button class="btn btn-primary" type="submit">Subscribe</button>
-        <p class="form-note" id="newsletter-note" role="status"></p>
+        <button class="auth-submit" type="submit" id="auth-submit">Log in</button>
+        <p class="auth-status" id="auth-status" role="status"></p>
       </form>
-    </div>
-  </section>
 
-</main>
+      <div class="auth-divider">or</div>
 
-<footer class="site-footer">
-  <div class="wrap">
-    <div class="footer-grid">
-      <div>
-        <h3>Decorative Corner</h3>
-        <p style="max-width: 32ch; color: var(--muted); font-size: 14px;">Handmade beaded wall and door hangings, made and packed by hand.</p>
-      </div>
-      <div>
-        <h3>Shop</h3>
-        <ul>
-          <li><a href="index.html#shop">All pieces</a></li>
-          <li><a href="contact.html">Custom colorways</a></li>
-        </ul>
-      </div>
-      <div>
-        <h3>Company</h3>
-        <ul>
-          <li><a href="index.html#story">Our story</a></li>
-          <li><a href="contact.html">Contact</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>&copy; 2026 Decorative Corner</span>
-      <span>Made and packed by hand</span>
+      <button class="auth-google" type="button" id="auth-google">
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/>
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z"/>
+          <path fill="#FBBC05" d="M5.84 14.1a6.6 6.6 0 0 1 0-4.2V7.06H2.18a11 11 0 0 0 0 9.88l3.66-2.84z"/>
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84C6.71 7.31 9.14 5.38 12 5.38z"/>
+        </svg>
+        Continue with Google
+      </button>
+
+      <p class="auth-footer">
+        By continuing you agree to our handmade-with-care terms.
+      </p>
     </div>
   </div>
-</footer>
+</main>
 
-<script type="module" src="firebase-config.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script type="module" src="subscription-tracker.js"></script>
-<script type="module" src="script.js"></script>
+<script type="module">
+import { auth, db } from './firebase-config.js';
+import {
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  updateProfile,
+  signInWithPopup,
+  GoogleAuthProvider,
+} from 'https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js';
+import {
+  doc, getDoc, setDoc,
+} from 'https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js';
+
+/* ---------- Elements ---------- */
+const form        = document.getElementById('auth-form');
+const titleEl     = document.getElementById('auth-title');
+const subtitleEl  = document.getElementById('auth-subtitle');
+const submitBtn   = document.getElementById('auth-submit');
+const statusEl    = document.getElementById('auth-status');
+const tabs        = document.querySelectorAll('.auth-tab');
+const nameRow     = document.getElementById('row-name');
+const emailInput  = document.getElementById('auth-email');
+const nameInput   = document.getElementById('auth-name');
+const passInput   = document.getElementById('auth-password');
+const googleBtn   = document.getElementById('auth-google');
+
+/* ---------- Mode (login vs signup) ---------- */
+let mode = 'login'; // 'login' | 'signup'
+
+function applyMode(next) {
+  mode = next;
+  tabs.forEach(t => {
+    const active = t.dataset.tab === mode;
+    t.classList.toggle('active', active);
+    t.setAttribute('aria-selected', String(active));
+  });
+  if (mode === 'signup') {
+    titleEl.textContent    = 'Create your account';
+    subtitleEl.textContent = 'Join Decorative Corner in a few seconds.';
+    submitBtn.textContent  = 'Create account';
+    nameRow.hidden         = false;
+    nameInput.required     = true;
+    passInput.autocomplete = 'new-password';
+    passInput.placeholder  = 'Choose a password (6+ characters)';
+  } else {
+    titleEl.textContent    = 'Welcome back';
+    subtitleEl.textContent = 'Log in to continue your order.';
+    submitBtn.textContent  = 'Log in';
+    nameRow.hidden         = true;
+    nameInput.required     = false;
+    passInput.autocomplete = 'current-password';
+    passInput.placeholder  = 'Your password';
+  }
+  statusEl.textContent = '';
+  statusEl.className   = 'auth-status';
+}
+
+/* Tab clicks */
+tabs.forEach(t => t.addEventListener('click', () => applyMode(t.dataset.tab)));
+
+/* Honour ?mode=signup on load */
+const params = new URLSearchParams(location.search);
+if (params.get('mode') === 'signup') applyMode('signup');
+else applyMode('login');
+
+/* ---------- Where to send them after login ---------- */
+function postLoginDestination() {
+  const next   = params.get('next');
+  const stored = sessionStorage.getItem('dc-redirect-after-login');
+  sessionStorage.removeItem('dc-redirect-after-login');
+  return next || stored || 'index.html';
+}
+
+/* If already signed in, don't show the form — just go */
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    location.replace(postLoginDestination());
+  }
+});
+
+/* ---------- Helpers ---------- */
+function setStatus(msg, kind = '') {
+  statusEl.textContent = msg;
+  statusEl.className   = 'auth-status' + (kind ? ' ' + kind : '');
+}
+
+function friendlyError(code) {
+  switch (code) {
+    case 'auth/invalid-email':          return 'That email address looks incorrect.';
+    case 'auth/user-not-found':         return 'No account found with that email.';
+    case 'auth/wrong-password':         return 'Incorrect password. Try again.';
+    case 'auth/invalid-credential':     return 'Incorrect email or password.';
+    case 'auth/email-already-in-use':   return 'That email is already registered. Try logging in.';
+    case 'auth/weak-password':          return 'Password must be at least 6 characters.';
+    case 'auth/too-many-requests':      return 'Too many attempts. Please wait a minute.';
+    case 'auth/popup-closed-by-user':   return ''; // silent
+    default:                            return 'Something went wrong. Please try again.';
+  }
+}
+
+/* ---------- Create a Firestore user doc on first login ---------- */
+async function ensureUserDoc(user, extra = {}) {
+  try {
+    const ref  = doc(db, 'users', user.uid);
+    const snap = await getDoc(ref);
+    if (!snap.exists()) {
+      await setDoc(ref, {
+        email:      user.email || '',
+        name:       user.displayName || extra.name || '',
+        createdAt:  new Date().toISOString(),
+        cart:       [],
+      }, { merge: true });
+    }
+  } catch (e) {
+    console.error('ensureUserDoc failed:', e);
+  }
+}
+
+/* ---------- Email / password submit ---------- */
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = emailInput.value.trim();
+  const pass  = passInput.value;
+  const name  = nameInput.value.trim();
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    setStatus('Please enter a valid email address.', 'error');
+    emailInput.focus();
+    return;
+  }
+  if (!pass || pass.length < 6) {
+    setStatus('Password must be at least 6 characters.', 'error');
+    passInput.focus();
+    return;
+  }
+  if (mode === 'signup' && !name) {
+    setStatus('Please add your name.', 'error');
+    nameInput.focus();
+    return;
+  }
+
+  submitBtn.disabled = true;
+  setStatus(mode === 'signup' ? 'Creating your account…' : 'Signing you in…');
+
+  try {
+    if (mode === 'signup') {
+      const cred = await createUserWithEmailAndPassword(auth, email, pass);
+      if (name) await updateProfile(cred.user, { displayName: name });
+      await ensureUserDoc(cred.user, { name });
+    } else {
+      const cred = await signInWithEmailAndPassword(auth, email, pass);
+      await ensureUserDoc(cred.user);
+    }
+    setStatus('Success — redirecting…', 'success');
+    location.replace(postLoginDestination());
+  } catch (err) {
+    console.error('Auth error:', err);
+    const msg = friendlyError(err.code);
+    if (msg) setStatus(msg, 'error');
+    submitBtn.disabled = false;
+  }
+});
+
+/* ---------- Google sign-in ---------- */
+googleBtn.addEventListener('click', async () => {
+  googleBtn.disabled = true;
+  setStatus('Opening Google…');
+  try {
+    const provider = new GoogleAuthProvider();
+    const cred     = await signInWithPopup(auth, provider);
+    await ensureUserDoc(cred.user);
+    setStatus('Success — redirecting…', 'success');
+    location.replace(postLoginDestination());
+  } catch (err) {
+    console.error('Google auth error:', err);
+    const msg = friendlyError(err.code);
+    if (msg) setStatus(msg, 'error');
+    googleBtn.disabled = false;
+  }
+});
+</script>
+
 </body>
 </html>
