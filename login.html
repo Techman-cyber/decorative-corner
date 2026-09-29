@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" class="auth-checking">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sign in — Decorative Corner</title>
+<title>Log in or Sign up — Decorative Corner</title>
+<meta name="description" content="Log in or create an account to shop handmade beaded hangings from Decorative Corner.">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="192x192" href="images/favicon-192.png">
 <link rel="icon" type="image/png" sizes="512x512" href="images/favicon-512.png">
@@ -13,333 +14,401 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <style>
-  /* This page shows itself once we know whether someone is already logged in. */
-  html.auth-checking body { visibility: hidden; }
+  .auth-wrap {
+    max-width: 440px;
+    margin: 40px auto 60px;
+    padding: 0 20px;
+  }
+  .auth-card {
+    background: #fffdf9;
+    border: 1px solid #e6dccd;
+    border-radius: 18px;
+    padding: 32px 28px;
+    box-shadow: 0 18px 40px rgba(28, 45, 79, 0.08);
+  }
+  .auth-card h1 {
+    margin: 0 0 6px;
+    font-family: Fraunces, serif;
+    font-size: 26px;
+    color: #17233d;
+  }
+  .auth-card p.sub {
+    margin: 0 0 22px;
+    color: #8a8578;
+    font-size: 14px;
+  }
+  .auth-tabs {
+    display: flex;
+    gap: 4px;
+    background: #f4ece0;
+    padding: 4px;
+    border-radius: 10px;
+    margin-bottom: 22px;
+  }
+  .auth-tab {
+    flex: 1;
+    padding: 9px 12px;
+    border: none;
+    background: transparent;
+    border-radius: 7px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #6b6458;
+    cursor: pointer;
+    transition: background .15s ease, color .15s ease;
+  }
+  .auth-tab.active {
+    background: #fffdf9;
+    color: #17233d;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06);
+  }
+  .auth-field {
+    margin-bottom: 16px;
+  }
+  .auth-field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #4a4438;
+    margin-bottom: 6px;
+  }
+  .auth-field input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #d8cfc5;
+    border-radius: 10px;
+    font-size: 15px;
+    font-family: inherit;
+    background: #fffdf9;
+    box-sizing: border-box;
+    transition: border-color .15s ease;
+  }
+  .auth-field input:focus {
+    outline: none;
+    border-color: #17233d;
+  }
+  .auth-submit {
+    width: 100%;
+    padding: 14px;
+    background: #17233d;
+    color: #fbf7ee;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 6px;
+    transition: background .15s ease;
+  }
+  .auth-submit:hover { background: #0f1a2f; }
+  .auth-submit:disabled { opacity: .6; cursor: not-allowed; }
+  .auth-status {
+    margin-top: 14px;
+    font-size: 13px;
+    min-height: 18px;
+    text-align: center;
+  }
+  .auth-status.error   { color: #b5502e; }
+  .auth-status.success { color: #3f6b3f; }
+  .auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 22px 0;
+    color: #b3a898;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .auth-divider::before,
+  .auth-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #efe6d8;
+  }
+  .auth-google {
+    width: 100%;
+    padding: 12px;
+    background: #fffdf9;
+    border: 1px solid #d8cfc5;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #17233d;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: background .15s ease;
+  }
+  .auth-google:hover { background: #f8f2e6; }
+  .auth-footer {
+    text-align: center;
+    font-size: 12px;
+    color: #8a8578;
+    margin-top: 20px;
+  }
+  .auth-back {
+    display: inline-block;
+    margin-bottom: 18px;
+    color: #6b6458;
+    font-size: 14px;
+    text-decoration: none;
+  }
+  .auth-back:hover { color: #17233d; }
 </style>
 </head>
 <body>
 
-<div class="auth-shell">
-  <div class="auth-card">
-    <a class="auth-brand" href="index.html">
-      <img src="images/logo.png" alt="Decorative Corner logo">
-      <span>Decorative Corner</span>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <img class="logo-mark" src="images/logo.png" alt="Decorative Corner logo">
+      <span class="brand-name">Decorative<br>Corner</span>
     </a>
-
-    <h1 id="auth-heading">Welcome back</h1>
-    <p class="auth-subtitle" id="auth-subtitle">Sign in to keep browsing.</p>
-
-    <div class="auth-tabs" role="tablist" aria-label="Sign in or create account">
-      <button class="auth-tab" id="tab-signin" type="button" role="tab" aria-selected="true">Sign in</button>
-      <button class="auth-tab" id="tab-signup" type="button" role="tab" aria-selected="false">Create account</button>
-    </div>
-
-    <form id="email-form" novalidate>
-      <div class="auth-field">
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" placeholder="you@email.com" required autocomplete="email">
-      </div>
-
-      <div class="auth-field">
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" placeholder="••••••••" required minlength="6" autocomplete="current-password">
-      </div>
-
-      <div class="auth-row-between">
-        <button type="button" class="auth-link" id="forgot-password">Forgot password?</button>
-      </div>
-
-      <button class="btn btn-primary btn-block" type="submit" id="email-submit">Sign in</button>
-
-      <p class="auth-status" id="auth-status" role="status"></p>
-    </form>
-
-    <div class="auth-divider">or</div>
-
-    <button class="btn-google" type="button" id="google-signin">
-      <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
-        <path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.9c1.7-1.57 2.7-3.88 2.7-6.62z"/>
-        <path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.9-2.26c-.8.54-1.84.86-3.06.86-2.35 0-4.34-1.59-5.05-3.72H.98v2.33A9 9 0 0 0 9 18z"/>
-        <path fill="#FBBC05" d="M3.95 10.7A5.4 5.4 0 0 1 3.67 9c0-.59.1-1.17.28-1.7V4.97H.98A9 9 0 0 0 0 9c0 1.45.35 2.83.98 4.03z"/>
-        <path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58C13.46.89 11.43 0 9 0A9 9 0 0 0 .98 4.97L3.95 7.3C4.66 5.17 6.65 3.58 9 3.58z"/>
-      </svg>
-      Continue with Google
-    </button>
-
-
-    <button class="btn-google" type="button" id="phone-toggle" style="margin-top: 10px;">
-      <span aria-hidden="true" style="font-size: 18px;">📱</span>
-      Continue with Phone Number
-    </button>
-
-    <section id="phone-panel" hidden style="margin-top: 16px;">
-      <div class="auth-field">
-        <label for="phone-number">Phone number</label>
-        <div style="display:flex;align-items:center;border:1px solid #d8d8d8;border-radius:8px;background:#fff;overflow:hidden;">
-          <span style="padding:14px 0 14px 14px;color:#555;white-space:nowrap;">+91</span>
-          <input id="phone-number" type="tel" inputmode="numeric" maxlength="10" placeholder="9876543210" autocomplete="tel-national" style="border:0;outline:0;flex:1;min-width:0;">
-        </div>
-      </div>
-      <div id="recaptcha-container" style="margin:12px 0;"></div>
-      <button class="btn btn-primary btn-block" type="button" id="send-sms-code">Send SMS code</button>
-      <div class="auth-field" style="margin-top:12px;">
-        <label for="sms-code">SMS code</label>
-        <input id="sms-code" type="text" inputmode="numeric" maxlength="6" placeholder="Enter 6-digit code" autocomplete="one-time-code">
-      </div>
-      <button class="btn btn-primary btn-block" type="button" id="verify-sms-code">Verify phone number</button>
-      <p class="auth-status" id="phone-status" role="status"></p>
-    </section>
-
-    <p class="auth-footer-note">By continuing you agree to be nice to our beads.</p>
-
-    <details style="margin-top: 16px; font-size: 12px; color: var(--muted);">
-      <summary style="cursor: pointer;">Google/Phone sign-in not working?</summary>
-      <ul style="padding-left: 18px; margin: 10px 0 0; line-height: 1.6;">
-        <li>Open this site over <code>http://</code> or <code>https://</code> (e.g. a local dev server) — not by double-clicking the HTML file, since Google pop-ups refuse to run from a <code>file://</code> page.</li>
-        <li>In the Firebase console, confirm Google and Phone are turned <strong>on</strong> under Authentication → Sign-in method.</li>
-        <li>Add whatever domain you're testing on (e.g. <code>localhost</code>, or your real domain) under Authentication → Settings → Authorized domains.</li>
-        <li>Double-check <code>firebase-config.js</code> has your actual project values, not the placeholder text.</li>
-        <li>Open the browser console (F12) — the exact error code shows there and above the form.</li>
-      </ul>
-    </details>
   </div>
-</div>
+</header>
+
+<main id="main">
+  <div class="auth-wrap">
+
+    <a class="auth-back" href="index.html">← Back to shop</a>
+
+    <div class="auth-card">
+      <h1 id="auth-title">Welcome back</h1>
+      <p class="sub" id="auth-subtitle">Log in to continue your order.</p>
+
+      <div class="auth-tabs" role="tablist">
+        <button class="auth-tab active" type="button" data-tab="login" role="tab" aria-selected="true">Log in</button>
+        <button class="auth-tab"        type="button" data-tab="signup" role="tab" aria-selected="false">Sign up</button>
+      </div>
+
+      <form id="auth-form" novalidate>
+
+        <div class="auth-field" id="row-name" hidden>
+          <label for="auth-name">Your name</label>
+          <input type="text" id="auth-name" name="name" autocomplete="name" placeholder="Jane Doe">
+        </div>
+
+        <div class="auth-field" id="row-email">
+          <label for="auth-email">Email</label>
+          <input type="email" id="auth-email" name="email" autocomplete="email" placeholder="you@email.com" required>
+        </div>
+
+        <div class="auth-field" id="row-password">
+          <label for="auth-password">Password</label>
+          <input type="password" id="auth-password" name="password" autocomplete="current-password" placeholder="At least 6 characters" required>
+        </div>
+
+        <button class="auth-submit" type="submit" id="auth-submit">Log in</button>
+        <p class="auth-status" id="auth-status" role="status"></p>
+      </form>
+
+      <div class="auth-divider">or</div>
+
+      <button class="auth-google" type="button" id="auth-google">
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/>
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z"/>
+          <path fill="#FBBC05" d="M5.84 14.1a6.6 6.6 0 0 1 0-4.2V7.06H2.18a11 11 0 0 0 0 9.88l3.66-2.84z"/>
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84C6.71 7.31 9.14 5.38 12 5.38z"/>
+        </svg>
+        Continue with Google
+      </button>
+
+      <p class="auth-footer">
+        By continuing you agree to our handmade-with-care terms.
+      </p>
+    </div>
+  </div>
+</main>
 
 <script type="module">
-  import { auth } from "./firebase-config.js";
-  import {
-    onAuthStateChanged,
-    signInWithEmailAndPassword,
-    createUserWithEmailAndPassword,
-    sendEmailVerification,
-    signOut,
-    signInWithPopup,
-    GoogleAuthProvider,
-    RecaptchaVerifier,
-    signInWithPhoneNumber,
-    sendPasswordResetEmail,
-  } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+import { auth, db } from './firebase-config.js';
+import {
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  updateProfile,
+  signInWithPopup,
+  GoogleAuthProvider,
+} from 'https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js';
+import {
+  doc, getDoc, setDoc,
+} from 'https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js';
 
-  const params = new URLSearchParams(location.search);
+/* ---------- Elements ---------- */
+const form        = document.getElementById('auth-form');
+const titleEl     = document.getElementById('auth-title');
+const subtitleEl  = document.getElementById('auth-subtitle');
+const submitBtn   = document.getElementById('auth-submit');
+const statusEl    = document.getElementById('auth-status');
+const tabs        = document.querySelectorAll('.auth-tab');
+const nameRow     = document.getElementById('row-name');
+const emailInput  = document.getElementById('auth-email');
+const nameInput   = document.getElementById('auth-name');
+const passInput   = document.getElementById('auth-password');
+const googleBtn   = document.getElementById('auth-google');
 
-  // Where to send them after a successful sign-in.
-  // Priority: ?next= in the URL → sessionStorage fallback → index.html
-  function postLoginDestination() {
-    const next   = params.get("next");
-    const stored = sessionStorage.getItem("dc-redirect-after-login");
-    sessionStorage.removeItem("dc-redirect-after-login");
-    return next || stored || "index.html";
-  }
+/* ---------- Mode (login vs signup) ---------- */
+let mode = 'login'; // 'login' | 'signup'
 
-  // Already signed in? Skip straight to the site instead of showing the form.
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      location.replace(postLoginDestination());
-    } else {
-      document.documentElement.classList.remove("auth-checking");
-    }
+function applyMode(next) {
+  mode = next;
+  tabs.forEach(t => {
+    const active = t.dataset.tab === mode;
+    t.classList.toggle('active', active);
+    t.setAttribute('aria-selected', String(active));
   });
-
-  const tabSignin = document.getElementById("tab-signin");
-  const tabSignup = document.getElementById("tab-signup");
-  const heading = document.getElementById("auth-heading");
-  const subtitle = document.getElementById("auth-subtitle");
-  const submitBtn = document.getElementById("email-submit");
-  const status = document.getElementById("auth-status");
-  const form = document.getElementById("email-form");
-  const emailInput = document.getElementById("email");
-  const passwordInput = document.getElementById("password");
-  const forgotBtn = document.getElementById("forgot-password");
-
-  let mode = "signin";
-
-  function setMode(newMode) {
-    mode = newMode;
-    const isSignin = mode === "signin";
-    tabSignin.setAttribute("aria-selected", String(isSignin));
-    tabSignup.setAttribute("aria-selected", String(!isSignin));
-    heading.textContent = isSignin ? "Welcome back" : "Create your account";
-    subtitle.textContent = isSignin ? "Sign in to keep browsing." : "Takes less than a minute.";
-    submitBtn.textContent = isSignin ? "Sign in" : "Create account";
-    passwordInput.autocomplete = isSignin ? "current-password" : "new-password";
-    status.textContent = "";
-    status.className = "auth-status";
-  }
-
-  tabSignin.addEventListener("click", () => setMode("signin"));
-  tabSignup.addEventListener("click", () => setMode("signup"));
-
-  // Honour ?mode=signup on page load (used by the header dropdown "Sign up" link)
-  if (params.get("mode") === "signup") {
-    setMode("signup");
+  if (mode === 'signup') {
+    titleEl.textContent    = 'Create your account';
+    subtitleEl.textContent = 'Join Decorative Corner in a few seconds.';
+    submitBtn.textContent  = 'Create account';
+    nameRow.hidden         = false;
+    nameInput.required     = true;
+    passInput.autocomplete = 'new-password';
+    passInput.placeholder  = 'Choose a password (6+ characters)';
   } else {
-    setMode("signin");
+    titleEl.textContent    = 'Welcome back';
+    subtitleEl.textContent = 'Log in to continue your order.';
+    submitBtn.textContent  = 'Log in';
+    nameRow.hidden         = true;
+    nameInput.required     = false;
+    passInput.autocomplete = 'current-password';
+    passInput.placeholder  = 'Your password';
+  }
+  statusEl.textContent = '';
+  statusEl.className   = 'auth-status';
+}
+
+/* Tab clicks */
+tabs.forEach(t => t.addEventListener('click', () => applyMode(t.dataset.tab)));
+
+/* Honour ?mode=signup on load */
+const params = new URLSearchParams(location.search);
+if (params.get('mode') === 'signup') applyMode('signup');
+else applyMode('login');
+
+/* ---------- Where to send them after login ---------- */
+function postLoginDestination() {
+  const next   = params.get('next');
+  const stored = sessionStorage.getItem('dc-redirect-after-login');
+  sessionStorage.removeItem('dc-redirect-after-login');
+  return next || stored || 'index.html';
+}
+
+/* If already signed in, don't show the form — just go */
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    location.replace(postLoginDestination());
+  }
+});
+
+/* ---------- Helpers ---------- */
+function setStatus(msg, kind = '') {
+  statusEl.textContent = msg;
+  statusEl.className   = 'auth-status' + (kind ? ' ' + kind : '');
+}
+
+function friendlyError(code) {
+  switch (code) {
+    case 'auth/invalid-email':          return 'That email address looks incorrect.';
+    case 'auth/user-not-found':         return 'No account found with that email.';
+    case 'auth/wrong-password':         return 'Incorrect password. Try again.';
+    case 'auth/invalid-credential':     return 'Incorrect email or password.';
+    case 'auth/email-already-in-use':   return 'That email is already registered. Try logging in.';
+    case 'auth/weak-password':          return 'Password must be at least 6 characters.';
+    case 'auth/too-many-requests':      return 'Too many attempts. Please wait a minute.';
+    case 'auth/popup-closed-by-user':   return ''; // silent
+    default:                            return 'Something went wrong. Please try again.';
+  }
+}
+
+/* ---------- Create a Firestore user doc on first login ---------- */
+async function ensureUserDoc(user, extra = {}) {
+  try {
+    const ref  = doc(db, 'users', user.uid);
+    const snap = await getDoc(ref);
+    if (!snap.exists()) {
+      await setDoc(ref, {
+        email:      user.email || '',
+        name:       user.displayName || extra.name || '',
+        createdAt:  new Date().toISOString(),
+        cart:       [],
+      }, { merge: true });
+    }
+  } catch (e) {
+    console.error('ensureUserDoc failed:', e);
+  }
+}
+
+/* ---------- Email / password submit ---------- */
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = emailInput.value.trim();
+  const pass  = passInput.value;
+  const name  = nameInput.value.trim();
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    setStatus('Please enter a valid email address.', 'error');
+    emailInput.focus();
+    return;
+  }
+  if (!pass || pass.length < 6) {
+    setStatus('Password must be at least 6 characters.', 'error');
+    passInput.focus();
+    return;
+  }
+  if (mode === 'signup' && !name) {
+    setStatus('Please add your name.', 'error');
+    nameInput.focus();
+    return;
   }
 
-  function showError(err) {
-    console.error("Auth error:", err);
-    status.className = "auth-status error";
-    status.textContent = friendlyError(err);
+  submitBtn.disabled = true;
+  setStatus(mode === 'signup' ? 'Creating your account…' : 'Signing you in…');
+
+  try {
+    if (mode === 'signup') {
+      const cred = await createUserWithEmailAndPassword(auth, email, pass);
+      if (name) await updateProfile(cred.user, { displayName: name });
+      await ensureUserDoc(cred.user, { name });
+    } else {
+      const cred = await signInWithEmailAndPassword(auth, email, pass);
+      await ensureUserDoc(cred.user);
+    }
+    setStatus('Success — redirecting…', 'success');
+    location.replace(postLoginDestination());
+  } catch (err) {
+    console.error('Auth error:', err);
+    const msg = friendlyError(err.code);
+    if (msg) setStatus(msg, 'error');
+    submitBtn.disabled = false;
   }
+});
 
-  function friendlyError(err) {
-    const code = err && err.code;
-    switch (code) {
-      case "auth/invalid-email": return "That email address doesn't look right.";
-      case "auth/user-not-found":
-      case "auth/wrong-password":
-      case "auth/invalid-credential": return "Email or password is incorrect.";
-      case "auth/email-already-in-use": return "An account already exists with that email — try signing in instead.";
-      case "auth/weak-password": return "Password should be at least 6 characters.";
-      case "auth/popup-closed-by-user": return "The sign-in popup was closed before finishing.";
-      case "auth/popup-blocked": return "Your browser blocked the sign-in popup — allow popups for this site and try again.";
-      case "auth/cancelled-popup-request": return "Only one sign-in popup can be open at a time.";
-      case "auth/unauthorized-domain": return "This domain isn't authorized in Firebase yet (Authentication → Settings → Authorized domains).";
-      case "auth/operation-not-allowed": return "This sign-in method isn't enabled yet in the Firebase console (Authentication → Sign-in method).";
-      case "auth/network-request-failed": return "Network error — check your connection and try again.";
-      case "auth/configuration-not-found": return "Firebase config looks incomplete — check firebase-config.js has your real project values.";
-      default: return `Something went wrong${code ? " (" + code + ")" : ""}. Check the browser console for details.`;
-    }
+/* ---------- Google sign-in ---------- */
+googleBtn.addEventListener('click', async () => {
+  googleBtn.disabled = true;
+  setStatus('Opening Google…');
+  try {
+    const provider = new GoogleAuthProvider();
+    const cred     = await signInWithPopup(auth, provider);
+    await ensureUserDoc(cred.user);
+    setStatus('Success — redirecting…', 'success');
+    location.replace(postLoginDestination());
+  } catch (err) {
+    console.error('Google auth error:', err);
+    const msg = friendlyError(err.code);
+    if (msg) setStatus(msg, 'error');
+    googleBtn.disabled = false;
   }
-
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    status.textContent = "";
-    status.className = "auth-status";
-    submitBtn.disabled = true;
-
-    const email = emailInput.value.trim();
-    const password = passwordInput.value;
-
-    try {
-      if (mode === "signin") {
-        const credential = await signInWithEmailAndPassword(auth, email, password);
-        if (!credential.user.emailVerified) {
-          await signOut(auth);
-          status.className = "auth-status error";
-          status.textContent = "Please verify your email first. Check your inbox or spam folder.";
-          return;
-        }
-      } else {
-        const credential = await createUserWithEmailAndPassword(auth, email, password);
-        await sendEmailVerification(credential.user);
-        await signOut(auth);
-        status.className = "auth-status success";
-        status.textContent = "Account created. Verification email sent — verify it before signing in.";
-        setMode("signin");
-        return;
-      }
-      location.replace(postLoginDestination());
-    } catch (err) {
-      showError(err);
-    } finally {
-      submitBtn.disabled = false;
-    }
-  });
-
-  forgotBtn.addEventListener("click", async () => {
-    const email = emailInput.value.trim();
-    if (!email) {
-      status.className = "auth-status error";
-      status.textContent = "Enter your email above first, then tap \"Forgot password?\".";
-      return;
-    }
-    try {
-      await sendPasswordResetEmail(auth, email);
-      status.className = "auth-status success";
-      status.textContent = `Password reset email sent to ${email}.`;
-    } catch (err) {
-      showError(err);
-    }
-  });
-
-  document.getElementById("google-signin").addEventListener("click", async () => {
-    status.textContent = "";
-    status.className = "auth-status";
-    try {
-      await signInWithPopup(auth, new GoogleAuthProvider());
-      location.replace(postLoginDestination());
-    } catch (err) {
-      showError(err);
-    }
-  });
-
-
-  const phoneToggle = document.getElementById("phone-toggle");
-  const phonePanel = document.getElementById("phone-panel");
-  const phoneInput = document.getElementById("phone-number");
-  const smsInput = document.getElementById("sms-code");
-  const sendSmsBtn = document.getElementById("send-sms-code");
-  const verifySmsBtn = document.getElementById("verify-sms-code");
-  const phoneStatus = document.getElementById("phone-status");
-  let recaptchaVerifier = null;
-  let confirmationResult = null;
-
-  phoneToggle.addEventListener("click", () => {
-    phonePanel.hidden = !phonePanel.hidden;
-    if (!phonePanel.hidden && !recaptchaVerifier) {
-      recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
-        size: "normal",
-        callback: () => { phoneStatus.textContent = "reCAPTCHA verified."; },
-        "expired-callback": () => { phoneStatus.textContent = "reCAPTCHA expired. Please verify again."; }
-      });
-      recaptchaVerifier.render().catch(showPhoneError);
-    }
-  });
-
-  phoneInput.addEventListener("input", () => {
-    phoneInput.value = phoneInput.value.replace(/\D/g, "").slice(0, 10);
-  });
-
-  function showPhoneError(err) {
-    console.error("Phone auth error:", err);
-    phoneStatus.className = "auth-status error";
-    phoneStatus.textContent = friendlyError(err);
-  }
-
-  sendSmsBtn.addEventListener("click", async () => {
-    const digits = phoneInput.value.trim();
-    if (!/^[6-9]\d{9}$/.test(digits)) {
-      phoneStatus.className = "auth-status error";
-      phoneStatus.textContent = "Enter a valid 10-digit Indian mobile number.";
-      return;
-    }
-    try {
-      sendSmsBtn.disabled = true;
-      phoneStatus.className = "auth-status";
-      phoneStatus.textContent = "Sending SMS code...";
-      if (!recaptchaVerifier) {
-        recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", { size: "normal" });
-        await recaptchaVerifier.render();
-      }
-      confirmationResult = await signInWithPhoneNumber(auth, "+91" + digits, recaptchaVerifier);
-      phoneStatus.className = "auth-status success";
-      phoneStatus.textContent = "SMS code sent.";
-    } catch (err) {
-      showPhoneError(err);
-      if (recaptchaVerifier) { recaptchaVerifier.clear(); recaptchaVerifier = null; }
-    } finally {
-      sendSmsBtn.disabled = false;
-    }
-  });
-
-  verifySmsBtn.addEventListener("click", async () => {
-    if (!confirmationResult) {
-      phoneStatus.className = "auth-status error";
-      phoneStatus.textContent = "Send an SMS code first.";
-      return;
-    }
-    try {
-      verifySmsBtn.disabled = true;
-      await confirmationResult.confirm(smsInput.value.trim());
-      location.replace(postLoginDestination());
-    } catch (err) {
-      showPhoneError(err);
-    } finally {
-      verifySmsBtn.disabled = false;
-    }
-  });
-
+});
 </script>
+
 </body>
 </html>
