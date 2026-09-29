@@ -1,7 +1,9 @@
 // ============================================
-// Auth guard — include on pages that require login:
+// Auth guard — include ONLY on pages that require login:
 //   profile.html, cart.html, checkout.html, admin.html
-// Do NOT include on: index.html, product.html, contact.html, login.html
+//
+// Do NOT include on:
+//   index.html, product.html, contact.html, login.html
 // ============================================
 import { auth } from "./firebase-config.js";
 import {
