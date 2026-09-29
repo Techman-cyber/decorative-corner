@@ -9,6 +9,10 @@ const EMAILJS_SERVICE_ID = 'service_ucbrp5r';
 const EMAILJS_SUBSCRIPTION_TEMPLATE_ID = 'template_ef70okk';
 const EMAILJS_CONTACT_TEMPLATE_ID = 'template_ciivzbg';
 
+import { auth, db } from './firebase-config.js';
+import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js';
+import { doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js';
+
 document.addEventListener('DOMContentLoaded', () => {
   initMobileNav();
   initAddToCart();
@@ -16,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initNewsletterForm();
   initContactForm();
   initCollectionSearch();
+  initProfileDropdown();
 });
 
 /* ---------- Mobile nav toggle ---------- */
@@ -32,49 +37,145 @@ function initMobileNav() {
 }
 
 /* ---------- Persistent cart ---------- */
-import { auth, db } from './firebase-config.js';
-import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js';
-import { doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js';
-
 const CART_KEY = 'dc-cart';
 let signedInUser = null;
 let cartReady = false;
 const CART_PRODUCTS = {
   'Blush Ring': { id:'blush-ring', name:'Blush Ring', price:125, image:'images/product-pink.png' },
   'Azure Ring': { id:'azure-ring', name:'Azure Ring', price:125, image:'images/product-blue.png' },
-  'Ivy Ring': { id:'ivy-ring', name:'Ivy Ring', price:125, image:'images/product-green.png' }
+  'Ivy Ring':   { id:'ivy-ring',   name:'Ivy Ring',   price:125, image:'images/product-green.png' }
 };
-function readCart(){ try { return JSON.parse(localStorage.getItem(CART_KEY)||'[]'); } catch { return []; } }
-function saveCart(cart){ localStorage.setItem(CART_KEY, JSON.stringify(cart)); updateCartBadge(); if (signedInUser && cartReady) setDoc(doc(db,'users',signedInUser.uid), {cart, cartUpdatedAt:new Date().toISOString()}, {merge:true}).catch(console.error); }
+
+function readCart(){
+  try { return JSON.parse(localStorage.getItem(CART_KEY)||'[]'); } catch { return []; }
+}
+function saveCart(cart){
+  localStorage.setItem(CART_KEY, JSON.stringify(cart));
+  updateCartBadge();
+  if (signedInUser && cartReady) {
+    setDoc(doc(db,'users',signedInUser.uid),
+      { cart, cartUpdatedAt:new Date().toISOString() },
+      { merge:true }).catch(console.error);
+  }
+}
 function updateCartBadge(){
-  const count=readCart().reduce((sum,item)=>sum+(Number(item.qty)||0),0);
+  const count = readCart().reduce((sum,item)=>sum+(Number(item.qty)||0),0);
   document.querySelectorAll('[data-cart-count]').forEach(el=>el.textContent=count);
   document.querySelectorAll('[data-cart-link]').forEach(el=>el.setAttribute('aria-label',`Shopping bag, ${count} items`));
 }
 function addProduct(name, quantity=1){
-  const product=CART_PRODUCTS[name]; if(!product) return;
-  const cart=readCart(); const existing=cart.find(item=>item.id===product.id);
-  if(existing) existing.qty += quantity;
+  const product = CART_PRODUCTS[name];
+  if (!product) return;
+  const cart = readCart();
+  const existing = cart.find(item=>item.id===product.id);
+  if (existing) existing.qty += quantity;
   else cart.push({...product, qty:quantity});
   saveCart(cart);
 }
+
+/* ---------- Auth state → cart sync + dropdown render ---------- */
 onAuthStateChanged(auth, async (user) => {
   signedInUser = user;
+  renderProfileDropdown(user);
+
   if (user) {
-    try { const snap = await getDoc(doc(db,'users',user.uid)); const data = snap.exists() ? snap.data() : {}; if (Array.isArray(data.cart)) localStorage.setItem(CART_KEY, JSON.stringify(data.cart)); } catch(e) { console.error('Cart restore failed:', e); }
+    try {
+      const snap = await getDoc(doc(db,'users',user.uid));
+      const data = snap.exists() ? snap.data() : {};
+      if (Array.isArray(data.cart)) localStorage.setItem(CART_KEY, JSON.stringify(data.cart));
+    } catch(e) { console.error('Cart restore failed:', e); }
   }
-  cartReady = true; updateCartBadge();
+  cartReady = true;
+  updateCartBadge();
 });
 
-function showToast(msg){let t=document.getElementById('dc-toast');if(!t){t=document.createElement('div');t.id='dc-toast';t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1c2d4f;color:#fbf7ee;padding:12px 22px;border-radius:999px;font:600 14px/1.2 Inter,-apple-system,sans-serif;box-shadow:0 12px 30px rgba(28,45,79,.35);z-index:9999;opacity:0;transition:opacity .25s ease, transform .25s ease;pointer-events:none;';document.body.appendChild(t);}t.textContent=msg;t.style.opacity='1';t.style.transform='translateX(-50%) translateY(-6px)';clearTimeout(showToast._t);showToast._t=setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(-50%)';},2200);}
+/* ---------- Toast ---------- */
+function showToast(msg){
+  let t = document.getElementById('dc-toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'dc-toast';
+    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1c2d4f;color:#fbf7ee;padding:12px 22px;border-radius:999px;font:600 14px/1.2 Inter,-apple-system,sans-serif;box-shadow:0 12px 30px rgba(28,45,79,.35);z-index:9999;opacity:0;transition:opacity .25s ease, transform .25s ease;pointer-events:none;';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.opacity = '1';
+  t.style.transform = 'translateX(-50%) translateY(-6px)';
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(()=>{
+    t.style.opacity='0';
+    t.style.transform='translateX(-50%)';
+  },2200);
+}
+
+/* ---------- Add-to-cart buttons (homepage) — now login-gated ---------- */
 function initAddToCart(){
-  document.querySelectorAll('.add-btn:not([disabled])').forEach(btn=>btn.addEventListener('click',()=>{
-    addProduct(btn.dataset.product,1);
-    showToast(`${btn.dataset.product} is in your cart now ✓`);
-    const old=btn.textContent; btn.textContent='Added'; btn.disabled=true;
-    setTimeout(()=>{btn.textContent=old;btn.disabled=false;},1200);
-  }));
+  document.querySelectorAll('.add-btn:not([disabled])').forEach(btn => {
+    btn.addEventListener('click', () => {
+      // Login gate
+      if (!auth.currentUser) {
+        sessionStorage.setItem('dc-redirect-after-login', location.href);
+        location.href = `login.html?next=${encodeURIComponent('index.html#shop')}`;
+        return;
+      }
+      addProduct(btn.dataset.product, 1);
+      showToast(`${btn.dataset.product} is in your cart now ✓`);
+      const old = btn.textContent;
+      btn.textContent = 'Added';
+      btn.disabled = true;
+      setTimeout(()=>{ btn.textContent = old; btn.disabled = false; }, 1200);
+    });
+  });
   updateCartBadge();
+}
+
+/* ---------- Profile dropdown ---------- */
+function initProfileDropdown(){
+  const trigger  = document.getElementById('profile-trigger');
+  const dropdown = document.getElementById('profile-dropdown');
+  if (!trigger || !dropdown) return;
+
+  trigger.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const open = !dropdown.hidden;
+    dropdown.hidden = open;
+    trigger.setAttribute('aria-expanded', String(!open));
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!dropdown.hidden && !dropdown.contains(e.target) && e.target !== trigger) {
+      dropdown.hidden = true;
+      trigger.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      dropdown.hidden = true;
+      trigger.setAttribute('aria-expanded', 'false');
+    }
+  });
+}
+
+function renderProfileDropdown(user){
+  const inView  = document.querySelector('[data-auth="in"]');
+  const outView = document.querySelector('[data-auth="out"]');
+  const label   = document.querySelector('[data-user-label]');
+  const nameEl  = document.querySelector('[data-user-name]');
+  const emailEl = document.querySelector('[data-user-email]');
+  if (!inView || !outView) return;
+
+  if (user) {
+    inView.hidden = false;
+    outView.hidden = true;
+    if (label)   label.textContent   = (user.displayName || 'Account').split(' ')[0];
+    if (nameEl)  nameEl.textContent  = user.displayName || 'Customer';
+    if (emailEl) emailEl.textContent = user.email || '';
+  } else {
+    inView.hidden = true;
+    outView.hidden = false;
+    if (label) label.textContent = 'Account';
+  }
 }
 
 /* ---------- Newsletter form ---------- */
@@ -111,16 +212,16 @@ function initContactForm() {
   if (!form) return;
 
   const fields = {
-    name: { el: document.getElementById('name'), row: document.getElementById('row-name') },
-    email: { el: document.getElementById('email'), row: document.getElementById('row-email') },
-    topic: { el: document.getElementById('topic'), row: document.getElementById('row-topic') },
+    name:    { el: document.getElementById('name'),    row: document.getElementById('row-name') },
+    email:   { el: document.getElementById('email'),   row: document.getElementById('row-email') },
+    topic:   { el: document.getElementById('topic'),   row: document.getElementById('row-topic') },
     message: { el: document.getElementById('message'), row: document.getElementById('row-message') },
   };
 
   const status = document.getElementById('form-status');
 
   Object.values(fields).forEach(({ el, row }) => {
-    el.addEventListener('input', () => row.classList.remove('has-error'));
+    el.addEventListener('input',  () => row.classList.remove('has-error'));
     el.addEventListener('change', () => row.classList.remove('has-error'));
   });
 
@@ -128,25 +229,10 @@ function initContactForm() {
     e.preventDefault();
     let hasError = false;
 
-    if (!fields.name.el.value.trim()) {
-      fields.name.row.classList.add('has-error');
-      hasError = true;
-    }
-
-    if (!isValidEmail(fields.email.el.value.trim())) {
-      fields.email.row.classList.add('has-error');
-      hasError = true;
-    }
-
-    if (!fields.topic.el.value) {
-      fields.topic.row.classList.add('has-error');
-      hasError = true;
-    }
-
-    if (fields.message.el.value.trim().length < 10) {
-      fields.message.row.classList.add('has-error');
-      hasError = true;
-    }
+    if (!fields.name.el.value.trim())                { fields.name.row.classList.add('has-error');    hasError = true; }
+    if (!isValidEmail(fields.email.el.value.trim())) { fields.email.row.classList.add('has-error');   hasError = true; }
+    if (!fields.topic.el.value)                      { fields.topic.row.classList.add('has-error');   hasError = true; }
+    if (fields.message.el.value.trim().length < 10)  { fields.message.row.classList.add('has-error'); hasError = true; }
 
     if (hasError) {
       status.textContent = 'Please fix the highlighted fields and try again.';
@@ -161,16 +247,14 @@ function initContactForm() {
     try {
       if (!window.emailjs) throw new Error('EmailJS library is unavailable');
       await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_CONTACT_TEMPLATE_ID, {
-        from_name: fields.name.el.value.trim(),
+        from_name:  fields.name.el.value.trim(),
         from_email: fields.email.el.value.trim(),
-        email: fields.email.el.value.trim(),
-        replyto: fields.email.el.value.trim(),
-        subject: fields.topic.el.value,
-        message: fields.message.el.value.trim(),
+        email:      fields.email.el.value.trim(),
+        replyto:    fields.email.el.value.trim(),
+        subject:    fields.topic.el.value,
+        message:    fields.message.el.value.trim(),
         submitted_at: new Date().toLocaleString('en-IN', {
-          timeZone: 'Asia/Kolkata',
-          dateStyle: 'medium',
-          timeStyle: 'short'
+          timeZone: 'Asia/Kolkata', dateStyle: 'medium', timeStyle: 'short'
         })
       });
       status.textContent = "Thanks — your message has been sent. We'll reply within one business day.";
@@ -184,18 +268,12 @@ function initContactForm() {
   });
 }
 
-
+/* ---------- Web3Forms helper ---------- */
 async function submitWeb3Form(fields) {
   const response = await fetch(WEB3FORMS_ENDPOINT, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    },
-    body: JSON.stringify({
-      access_key: WEB3FORMS_ACCESS_KEY,
-      ...fields
-    })
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({ access_key: WEB3FORMS_ACCESS_KEY, ...fields })
   });
   const result = await response.json();
   if (!response.ok || !result.success) {
@@ -211,15 +289,11 @@ function isValidEmail(value) {
 
 /* ---------- Hidden admin shortcut: Ctrl + A twice ---------- */
 (function initAdminShortcut() {
-  let presses = 0;
-  let lastPress = 0;
-  let resetTimer;
-  let comboHeld = false;
+  let presses = 0, lastPress = 0, resetTimer, comboHeld = false;
 
   document.addEventListener('keydown', (event) => {
     const isCtrlA = event.ctrlKey && event.code === 'KeyA';
     if (!isCtrlA || event.repeat || comboHeld) return;
-
     comboHeld = true;
     event.preventDefault();
     event.stopPropagation();
@@ -229,21 +303,14 @@ function isValidEmail(value) {
     lastPress = now;
     presses += 1;
     clearTimeout(resetTimer);
-    resetTimer = setTimeout(() => {
-      presses = 0;
-      lastPress = 0;
-    }, 1500);
+    resetTimer = setTimeout(() => { presses = 0; lastPress = 0; }, 1500);
 
     if (presses === 2) {
-      presses = 0;
-      lastPress = 0;
+      presses = 0; lastPress = 0;
       clearTimeout(resetTimer);
       const pass = window.prompt('Admin password:');
-      if (pass === 'whytofearwhenwearehere') {
-        window.location.href = 'admin.html';
-      } else if (pass !== null) {
-        window.alert('Incorrect admin password.');
-      }
+      if (pass === 'whytofearwhenwearehere') window.location.href = 'admin.html';
+      else if (pass !== null) window.alert('Incorrect admin password.');
     }
   }, true);
 
@@ -252,25 +319,32 @@ function isValidEmail(value) {
   }, true);
 })();
 
-
+/* ---------- Collection search + card keyboard support ---------- */
 function initCollectionSearch(){
-  const input=document.getElementById('collection-search');
-  if(input){
-    const cards=[...document.querySelectorAll('.product-card')];
-    input.addEventListener('input',()=>{const term=input.value.trim().toLowerCase();cards.forEach(card=>{card.hidden=!!term&&!card.textContent.toLowerCase().includes(term);});});
+  const input = document.getElementById('collection-search');
+  if (input) {
+    const cards = [...document.querySelectorAll('.product-card')];
+    input.addEventListener('input', () => {
+      const term = input.value.trim().toLowerCase();
+      cards.forEach(card => {
+        card.hidden = !!term && !card.textContent.toLowerCase().includes(term);
+      });
+    });
   }
-  document.querySelectorAll('.product-card').forEach(card=>{
+  document.querySelectorAll('.product-card').forEach(card => {
     card.setAttribute('tabindex','0');
     card.setAttribute('role','link');
-    const link=card.querySelector('h3 a');
-    if(!link)return;
-    const open=()=>{window.location.href=link.href;};
-    card.addEventListener('click',e=>{
-      if(e.target.closest('button, a'))return;
+    const link = card.querySelector('h3 a');
+    if (!link) return;
+    const open = () => { window.location.href = link.href; };
+    card.addEventListener('click', e => {
+      if (e.target.closest('button, a')) return;
       open();
     });
-    card.addEventListener('keydown',e=>{
-      if((e.key==='Enter'||e.key===' ') && !e.target.closest('button,a')){e.preventDefault();open();}
+    card.addEventListener('keydown', e => {
+      if ((e.key === 'Enter' || e.key === ' ') && !e.target.closest('button,a')) {
+        e.preventDefault(); open();
+      }
     });
   });
 }
