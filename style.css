@@ -1039,3 +1039,20 @@ html.auth-checking body { visibility: hidden; }
   .profile-dropdown { right: -8px; min-width: 200px; }
   .user-label { display: none; }
 }
+/* ---------- Login page back link (optional polish) ---------- */
+.auth-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 16px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  background: #fffdf9;
+  border: 1px solid #e6dccd;
+  color: #17233d;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background .15s ease, transform .15s ease;
+}
+.auth-back:hover { background: #f4ece0; transform: translateX(-2px); }
