@@ -1,5 +1,7 @@
 // ============================================
-// Auth guard — include this on every page that should require login
+// Auth guard — include on pages that require login:
+//   profile.html, cart.html, checkout.html, admin.html
+// Do NOT include on: index.html, product.html, contact.html, login.html
 // ============================================
 import { auth } from "./firebase-config.js";
 import {
@@ -9,20 +11,18 @@ import {
 
 onAuthStateChanged(auth, (user) => {
   if (!user) {
-    const here = location.pathname.split("/").pop() || "index.html";
+    const here = location.pathname.split("/").pop() + location.search || "index.html";
     location.replace(`login.html?next=${encodeURIComponent(here)}`);
     return;
   }
 
-  // Reveal the page now that we know the visitor is signed in.
+  // Reveal the page now that the visitor is signed in.
   document.documentElement.classList.remove("auth-checking");
-
-  // Fill in any "who's signed in" placeholders in the header.
 });
 
-// Wire up any logout button on the page (header, menu, etc.)
+// Logout button handler — sends user home, not back to login.
 document.addEventListener("click", (e) => {
   const btn = e.target.closest("[data-logout]");
   if (!btn) return;
-  signOut(auth).then(() => location.replace("login.html"));
+  signOut(auth).then(() => location.replace("index.html"));
 });
