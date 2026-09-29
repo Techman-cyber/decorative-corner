@@ -108,11 +108,10 @@ function showToast(msg){
   },2200);
 }
 
-/* ---------- Add-to-cart buttons (homepage) — now login-gated ---------- */
+/* ---------- Add-to-cart buttons (homepage) — login-gated ---------- */
 function initAddToCart(){
   document.querySelectorAll('.add-btn:not([disabled])').forEach(btn => {
     btn.addEventListener('click', () => {
-      // Login gate
       if (!auth.currentUser) {
         sessionStorage.setItem('dc-redirect-after-login', location.href);
         location.href = `login.html?next=${encodeURIComponent('index.html#shop')}`;
