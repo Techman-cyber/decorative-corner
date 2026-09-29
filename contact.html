@@ -31,13 +31,43 @@
         <li><a href="index.html#shop">Shop</a></li>
         <li><a href="index.html#story">Our Story</a></li>
         <li><a href="contact.html" aria-current="page">Contact</a></li>
-        <li><a href="profile.html">Profile</a></li>
       </ul>
     </nav>
 
     <div class="header-actions">
-      <button class="icon-btn" type="button" aria-label="Shopping bag, 0 items" data-cart-link><span class="bag-icon" aria-hidden="true">♧</span><span class="bag-label">Bag</span> (<span data-cart-count>0</span>)</button>
-      
+
+      <div class="profile-menu" id="profile-menu">
+        <button class="icon-btn profile-trigger" type="button"
+                id="profile-trigger"
+                aria-haspopup="true"
+                aria-expanded="false"
+                aria-label="Account menu">
+          <span class="user-icon" aria-hidden="true">👤</span>
+          <span class="user-label" data-user-label>Account</span>
+        </button>
+
+        <div class="profile-dropdown" id="profile-dropdown" hidden>
+          <div data-auth="out">
+            <a href="login.html" class="dropdown-item">Log in</a>
+            <a href="login.html?mode=signup" class="dropdown-item dropdown-item--primary">Sign up</a>
+          </div>
+          <div data-auth="in" hidden>
+            <div class="dropdown-header">
+              <span class="dropdown-name" data-user-name>Customer</span>
+              <span class="dropdown-email" data-user-email></span>
+            </div>
+            <a href="profile.html" class="dropdown-item">My profile</a>
+            <a href="cart.html" class="dropdown-item">My cart</a>
+            <button type="button" class="dropdown-item dropdown-item--danger" data-logout>Log out</button>
+          </div>
+        </div>
+      </div>
+
+      <a class="icon-btn" href="cart.html" aria-label="Shopping bag, 0 items" data-cart-link>
+        <span class="bag-icon" aria-hidden="true">♧</span>
+        <span class="bag-label">Bag</span> (<span data-cart-count>0</span>)
+      </a>
+
       <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav">Menu</button>
     </div>
   </div>
@@ -48,7 +78,6 @@
       <li><a href="index.html#shop">Shop</a></li>
       <li><a href="index.html#story">Our Story</a></li>
       <li><a href="contact.html">Contact</a></li>
-      <li><a href="profile.html">Profile</a></li>
     </ul>
   </nav>
 </header>
@@ -155,6 +184,7 @@
 
 <script type="module" src="firebase-config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script type="module" src="subscription-tracker.js"></script>
 <script type="module" src="script.js"></script>
 </body>
 </html>
