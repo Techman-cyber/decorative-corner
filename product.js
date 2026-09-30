@@ -14,16 +14,19 @@ if (isReload && location.pathname.endsWith('/product.html')) {
 }
 
 const products = {
-  "Blush Ring": { image:'images/product-pink.png',  price:125, description:'Handmade pink beaded wall hanging.' },
-  "Azure Ring": { image:'images/product-blue.png',  price:125, description:'Handmade blue beaded wall hanging.' },
-  "Ivy Ring":   { image:'images/product-green.png', price:125, description:'Handmade green beaded wall hanging.' }
+  "Blush Ring": { image:'images/blush-ring.png', price:125, description:'Handmade pink beaded wall hanging.' },
+  "Azure Ring": { image:'images/azure-ring.png', price:125, description:'Handmade blue beaded wall hanging.' },
+  "Ivy Ring":   { image:'images/ivy-ring.png',   price:125, description:'Handmade green beaded wall hanging.' },
+  "Rose Ring":  { image:'images/rose-ring.png',  price:125, description:'Handmade rose beaded wall hanging.' },
+  "Sage Ring":  { image:'images/sage-ring.png',  price:125, description:'Handmade sage beaded wall hanging.' },
+  "Amber Ring": { image:'images/amber-ring.png', price:125, description:'Handmade amber beaded wall hanging.' }
 };
 
 const name = new URLSearchParams(location.search).get('name') || 'Blush Ring';
 const p = products[name] || products['Blush Ring'];
 document.getElementById('product-name').textContent = name;
 document.getElementById('product-image').src = p.image;
-document.getElementById('product-price').textContent = '₹125';
+document.getElementById('product-price').textContent = '₹' + p.price;
 document.getElementById('product-description').textContent = p.description;
 
 /* ---------- Gallery zoom ---------- */
@@ -79,7 +82,7 @@ document.getElementById('add').addEventListener('click', () => {
   let q = quantity;
   let x = c.find(i => i.name === name);
   if (x) x.qty += q;
-  else c.push({ name, price: 125, image: p.image, qty: q });
+  else c.push({ name, price: p.price, image: p.image, qty: q });
   localStorage.setItem('dc-cart', JSON.stringify(c));
 
   if (auth.currentUser) {
