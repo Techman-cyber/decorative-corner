@@ -40,10 +40,14 @@ function initMobileNav() {
 const CART_KEY = 'dc-cart';
 let signedInUser = null;
 let cartReady = false;
+
 const CART_PRODUCTS = {
-  'Blush Ring': { id:'blush-ring', name:'Blush Ring', price:125, image:'images/product-pink.png' },
-  'Azure Ring': { id:'azure-ring', name:'Azure Ring', price:125, image:'images/product-blue.png' },
-  'Ivy Ring':   { id:'ivy-ring',   name:'Ivy Ring',   price:125, image:'images/product-green.png' }
+  'Blush Ring': { id:'blush-ring', name:'Blush Ring', price:125, image:'images/blush-ring.png' },
+  'Azure Ring': { id:'azure-ring', name:'Azure Ring', price:125, image:'images/azure-ring.png' },
+  'Ivy Ring':   { id:'ivy-ring',   name:'Ivy Ring',   price:125, image:'images/ivy-ring.png' },
+  'Rose Ring':  { id:'rose-ring',  name:'Rose Ring',  price:125, image:'images/rose-ring.png' },
+  'Sage Ring':  { id:'sage-ring',  name:'Sage Ring',  price:125, image:'images/sage-ring.png' },
+  'Amber Ring': { id:'amber-ring', name:'Amber Ring', price:125, image:'images/amber-ring.png' }
 };
 
 function readCart(){
