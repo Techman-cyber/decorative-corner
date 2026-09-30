@@ -14,12 +14,12 @@ if (isReload && location.pathname.endsWith('/product.html')) {
 }
 
 const products = {
-  "Blush Ring": { image:'images/blush-ring.png', price:125, description:'Handmade pink beaded wall hanging.' },
-  "Azure Ring": { image:'images/azure-ring.png', price:125, description:'Handmade blue beaded wall hanging.' },
-  "Ivy Ring":   { image:'images/ivy-ring.png',   price:125, description:'Handmade green beaded wall hanging.' },
-  "Rose Ring":  { image:'images/rose-ring.png',  price:125, description:'Handmade rose beaded wall hanging.' },
-  "Sage Ring":  { image:'images/sage-ring.png',  price:125, description:'Handmade sage beaded wall hanging.' },
-  "Amber Ring": { image:'images/amber-ring.png', price:125, description:'Handmade amber beaded wall hanging.' }
+  "Blush Ring":   { image:'images/blush-ring.png',   price:125, description:'Handmade pink beaded wall hanging.' },
+  "Azure Ring":   { image:'images/azure-ring.png',   price:125, description:'Handmade blue beaded wall hanging.' },
+  "Ivy Ring":     { image:'images/ivy-ring.png',     price:125, description:'Handmade green beaded wall hanging.' },
+  "Peacock Ring": { image:'images/peacock-ring.png', price:125, description:'Handmade multi-colour beaded wall hanging with gold accents and pearl strands.' },
+  "Sage Ring":    { image:'images/sage-ring.png',    price:125, description:'Handmade jute-wrapped wall hanging with pearl strands and soft tassels.' },
+  "Emerald Ring": { image:'images/emerald-ring.png', price:125, description:'Handmade emerald green beaded wall hanging with wooden beads.' }
 };
 
 const name = new URLSearchParams(location.search).get('name') || 'Blush Ring';
