@@ -10,9 +10,77 @@
 <link rel="icon" href="favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="192x192" href="images/favicon-192.png"><link rel="icon" type="image/png" sizes="512x512" href="images/favicon-512.png"><link rel="apple-touch-icon" sizes="180x180" href="images/favicon-180.png">
 </head>
 <body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <img class="logo-mark" src="images/logo.png" alt="Decorative Corner logo">
+      <span class="brand-name">Decorative<br>Corner</span>
+    </a>
+
+    <nav class="main-nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#shop">Shop</a></li>
+        <li><a href="index.html#story">Our Story</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="header-actions">
+
+      <div class="profile-menu" id="profile-menu">
+        <button class="icon-btn profile-trigger" type="button"
+                id="profile-trigger"
+                aria-haspopup="true"
+                aria-expanded="false"
+                aria-label="Account menu">
+          <span class="user-icon" aria-hidden="true">👤</span>
+          <span class="user-label" data-user-label>Account</span>
+        </button>
+
+        <div class="profile-dropdown" id="profile-dropdown" hidden>
+          <div data-auth="out">
+            <a href="login.html" class="dropdown-item">Log in</a>
+            <a href="login.html?mode=signup" class="dropdown-item dropdown-item--primary">Sign up</a>
+          </div>
+          <div data-auth="in" hidden>
+            <div class="dropdown-header">
+              <span class="dropdown-name" data-user-name>Customer</span>
+              <span class="dropdown-email" data-user-email></span>
+            </div>
+            <a href="profile.html" class="dropdown-item">My profile</a>
+            <a href="cart.html" class="dropdown-item">My cart</a>
+            <button type="button" class="dropdown-item dropdown-item--danger" data-logout>Log out</button>
+          </div>
+        </div>
+      </div>
+
+      <a class="icon-btn" href="cart.html" aria-label="Shopping bag, 0 items" data-cart-link>
+        <span class="bag-icon" aria-hidden="true">♧</span>
+        <span class="bag-label">Bag</span> (<span data-cart-count>0</span>)
+      </a>
+
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav">Menu</button>
+    </div>
+  </div>
+
+  <nav id="mobile-nav" class="mobile-nav" aria-label="Mobile" hidden>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="index.html#shop">Shop</a></li>
+      <li><a href="index.html#story">Our Story</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
 <div class="product-topbar"><a class="back-arrow" href="index.html#shop"><span>←</span> Back to shop</a></div>
+
 <main class="product-page">
-<section><div class="gallery" id="gallery"><img id="product-image" src="images/product-pink.png" alt="Product"><div class="hint">Move your cursor over the image for ultra zoom</div></div></section>
+<section><div class="gallery" id="gallery"><img id="product-image" src="images/blush-ring.png" alt="Product"><div class="hint">Move your cursor over the image for ultra zoom</div></div></section>
 <section>
 <p class="eyebrow">Decorative Corner</p><h1 id="product-name">Blush Ring</h1><h2 id="product-price">₹125</h2>
 <div id="rating-summary" class="rating-summary"><span class="stars">☆☆☆☆☆</span><small>(0 ratings)</small></div>
@@ -24,4 +92,8 @@
 <h3>Write a review</h3><form class="review-form" id="review-form">
 <div><div class="star-picker" id="star-picker" aria-label="Choose a rating"><button type="button" class="star-choice" data-rating="1" aria-label="1 star">★</button><button type="button" class="star-choice" data-rating="2" aria-label="2 stars">★</button><button type="button" class="star-choice" data-rating="3" aria-label="3 stars">★</button><button type="button" class="star-choice" data-rating="4" aria-label="4 stars">★</button><button type="button" class="star-choice" data-rating="5" aria-label="5 stars">★</button></div><p class="selected-rating" id="selected-rating">Choose 1–5 stars</p></div>
 <textarea id="review-text" placeholder="Write a review (optional)"></textarea><button>Submit review</button><p id="status"></p></form>
-</section></main><script type="module" src="product.js"></script></body></html>
+</section></main>
+<script type="module" src="firebase-config.js"></script>
+<script type="module" src="product.js"></script>
+</body>
+</html>
